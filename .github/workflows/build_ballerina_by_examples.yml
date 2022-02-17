@@ -1,4 +1,4 @@
-name: CI
+name: Build BBEs
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
       - name: Create Strategy Matrix
         id: set-matrix
         run: |
-          SAMPLES="`jq -r '.version' examples/index.json`"
+          SAMPLES="`jq -r '.samples' examples/index.json`"
           for testGroup in ${SAMPLES}; do echo testGroup["title"]; done
 
 #          echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json --names)"
