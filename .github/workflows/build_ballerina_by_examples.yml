@@ -15,7 +15,7 @@ jobs:
       - name: Create Strategy Matrix
         id: set-matrix
         run: |
-          SAMPLES="`jq -r '.[0]' examples/index.json`"
+          SAMPLES="examples/index.json | jq '.[0]'"
           echo $SAMPLES
 
 #          echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json --names)"
