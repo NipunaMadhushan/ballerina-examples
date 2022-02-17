@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a8dd28e3-807d-4cff-a989-47e7954e1c2e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.github/workflows/build_ballerina_by_examples.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build_ballerina_by_examples.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +32,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1645101307756</updated>
-      <workItem from="1645101309735" duration="4000000" />
+      <workItem from="1645101309735" duration="4349000" />
     </task>
     <servers />
   </component>

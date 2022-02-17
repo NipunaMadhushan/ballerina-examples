@@ -15,7 +15,9 @@ jobs:
       - name: Create Strategy Matrix
         id: set-matrix
         run: |
-          for testGroup in "`jq -r '.' examples/index.json`"; do echo $testGroup; done
+          arr=( $(jq -r '.[].title' examples/index.json) )
+          printf '%s\n' "${arr[@]}"
+#          for testGroup in "`jq -r '.' examples/index.json`"; do echo $testGroup; done
 #          for testGroup in "`jq -r '. | {title: .title, category: .category}' examples/index.json`"; do echo $testGroup; done
 
 #          echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json --names)"
