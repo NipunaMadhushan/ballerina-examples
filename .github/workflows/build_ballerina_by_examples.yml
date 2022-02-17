@@ -18,26 +18,22 @@ jobs:
           BBE_DATA_FILE="examples/index.json"
           bbes=()
           for index in $(jq '. | keys | .[]' $BBE_DATA_FILE); do samples=$(jq -r ".[$index].samples" $BBE_DATA_FILE) && for bbe_url in $(jq -r ".[].url" <<< "$samples"); do bbes[${#bbes[@]}]=$bbe_url; done; done
-          echo "${bbes[1]}"
-          echo "${bbes[@]}"
-#          for testGroup in "`jq -r '.[] | {title: .title}' examples/index.json`"; do echo $testGroup; done
-#          for testGroup in "`jq -r '. | {title: .title, category: .category}' examples/index.json`"; do echo $testGroup; done
+          echo "::set-output name=matrix::$bbes"
 
-#          echo "::set-output name=matrix::$(vendor/bin/monorepo-builder packages-json --names)"
-#    outputs:
-#      matrix: ${{ steps.set-matrix.outputs.matrix }}
-#
-#  build-bbe:
-#    needs: initialize-matrix
-#    name: Build BBE
-#    runs-on: ubuntu-latest
-#    strategy:
-#      matrix:
-#        package: ${{ fromJson(needs.initialize-matrix.outputs.matrix) }}
-#
-#    steps:
-#      - name: Ballerina Build
-#        uses: ballerina-platform/ballerina-action@master
-#        with:
-#          args:
-#            build
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  build-bbe:
+    needs: initialize-matrix
+    name: Build BBE
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.initialize-matrix.outputs.matrix) }}
+
+    steps:
+      - name: Ballerina Build
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            build
