@@ -19,6 +19,10 @@ jobs:
           bbes=()
           for index in $(jq '. | keys | .[]' $BBE_DATA_FILE); do samples=$(jq -r ".[$index].samples" $BBE_DATA_FILE) && for bbe_url in $(jq -r ".[].url" <<< "$samples"); do bbes[${#bbes[@]}]=$bbe_url; done; done
           echo "::set-output name=matrix::$bbes"
+      
+      - name: Strategy Matrix
+        run: |
+          echo ${{ steps.set-matrix.outputs.matrix }}
 
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -29,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: ${{ fromJson(needs.initialize-matrix.outputs.matrix) }}
+        package: ${{ needs.initialize-matrix.outputs.matrix }}
 
     steps:
       - name: Ballerina Build
