@@ -24,7 +24,10 @@ jobs:
       
       - name: Strategy Matrix
         run: |
-          echo ${{ steps.set-matrix.outputs.matrix[56] }}
+          echo ${{ steps.set-matrix.outputs.matrix }}
+          BBES=${{ steps.set-matrix.outputs.matrix }}
+          echo ${BBES}
+          echo ${BBES[56]}
 
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
