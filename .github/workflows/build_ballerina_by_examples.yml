@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: ${{ needs.initialize-matrix.outputs.matrix }}
+        package: ${{ fromJson([needs.initialize-matrix.outputs.matrix]) }}
 
     steps:
       - name: Ballerina Build
