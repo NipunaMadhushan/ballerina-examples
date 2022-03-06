@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        bbe: ${{["a", "b", "c"]}}
+        bbe: ${{fromJson(["a", "b", "c"])}}
 
     steps:
       - name: Echo BBE
