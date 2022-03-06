@@ -36,9 +36,10 @@ jobs:
     steps:
       - name: Echo BBE
         run: echo ${{ matrix.bbe }}
-      - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action@master
-        with:
-          args:
-            build
+        
+#       - name: Ballerina Build
+#         uses: ballerina-platform/ballerina-action@master
+#         with:
+#           args:
+#             build
 
