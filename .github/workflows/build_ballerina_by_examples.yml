@@ -25,7 +25,7 @@ jobs:
       - name: Strategy Matrix
         run: |
           BBES=${{ steps.set-matrix.outputs.matrix }}
-          echo ${BBES[56]}
+          for bbe in ${BBES[@]}; do echo $bbe; done
 
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
