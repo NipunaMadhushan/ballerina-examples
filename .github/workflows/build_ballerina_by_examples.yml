@@ -18,7 +18,7 @@ jobs:
           BBE_DATA_FILE="examples/index.json"
           bbes="["
           for index in $(jq '. | keys | .[]' $BBE_DATA_FILE); do samples=$(jq -r ".[$index].samples" $BBE_DATA_FILE) && for bbe_url in $(jq -r ".[].url" <<< "$samples"); do bbes="${bbes}\"${bbe_url}\", "; done; done
-          bbes="${bbes: : -500}]"
+          bbes="${bbes: : -700}]"
           echo ${bbes}
           echo "::set-output name=matrix::${bbes}"
 
