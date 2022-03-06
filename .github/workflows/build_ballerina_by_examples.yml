@@ -23,7 +23,7 @@ jobs:
           echo "::set-output name=matrix::${bbes}"
 
     outputs:
-      matrix: "${{ steps.set-matrix.outputs.matrix }}"
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   build-bbe:
     needs: initialize-matrix
