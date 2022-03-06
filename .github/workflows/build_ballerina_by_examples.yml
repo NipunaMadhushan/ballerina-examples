@@ -36,11 +36,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: ${{ fromJson([needs.initialize-matrix.outputs.matrix]) }}
+        bbe: ${{["a", "b", "c"]}}
 
     steps:
+      - name: Echo BBE
+        run: echo ${{ matrix.bbe }}
       - name: Ballerina Build
         uses: ballerina-platform/ballerina-action@master
         with:
           args:
             build
+
