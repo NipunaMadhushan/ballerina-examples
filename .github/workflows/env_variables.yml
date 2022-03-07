@@ -44,4 +44,6 @@ jobs:
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}"
+          echo ${{ github.repository_owner }}
+
 
