@@ -1,0 +1,46 @@
+name: Environment Variables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    name: Get Env Variable Values
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Get Github Variables
+        run: |
+          echo "GITHUB_ACTION: ${{ env.GITHUB_ACTION }}"
+          echo "GITHUB_ACTION_PATH: ${{ env.GITHUB_ACTION_PATH }}"
+          echo "GITHUB_ACTION_REPOSITORY: ${{ env.GITHUB_ACTION_REPOSITORY }}"
+          echo "GITHUB_ACTIONS: ${{ env.GITHUB_ACTIONS }}"
+          echo "GITHUB_ACTOR: ${{ env.GITHUB_ACTOR }}"
+          echo "GITHUB_API_URL: ${{ env.GITHUB_API_URL }}"
+          echo "GITHUB_BASE_REF: ${{ env.GITHUB_BASE_REF }}"
+          echo "GITHUB_ENV: ${{ env.GITHUB_ENV }}"
+          echo "GITHUB_EVENT_NAME: ${{ env.GITHUB_EVENT_NAME }}"
+          echo "GITHUB_EVENT_PATH: ${{ env.GITHUB_EVENT_PATH }}"
+          echo "GITHUB_GRAPHQL_URL: ${{ env.GITHUB_GRAPHQL_URL }}"
+          echo "GITHUB_HEAD_REF: ${{ env.GITHUB_HEAD_REF }}"
+          echo "GITHUB_JOB: ${{ env.GITHUB_JOB }}"
+          echo "GITHUB_PATH: ${{ env.GITHUB_PATH }}"
+          echo "GITHUB_REF: ${{ env.GITHUB_REF }}"
+          echo "GITHUB_REF_NAME: ${{ env.GITHUB_REF_NAME }}"
+          echo "GITHUB_REF_PROTECTED: ${{ env.GITHUB_REF_PROTECTED }}"
+          echo "GITHUB_REF_TYPE: ${{ env.GITHUB_REF_TYPE }}"
+          echo "GITHUB_REPOSITORY: ${{ env.GITHUB_REPOSITORY }}"
+          echo "GITHUB_REPOSITORY_OWNER: ${{ env.GITHUB_REPOSITORY_OWNER }}"
+          echo "GITHUB_RETENTION_DAYS: ${{ env.GITHUB_RETENTION_DAYS }}"
+          echo "GITHUB_RUN_ATTEMPT: ${{ env.GITHUB_RUN_ATTEMPT }}"
+          echo "GITHUB_RUN_ID: ${{ env.GITHUB_RUN_ID }}"
+          echo "GITHUB_RUN_NUMBER: ${{ env.GITHUB_RUN_NUMBER }}"
+          echo "GITHUB_SERVER_URL: ${{ env.GITHUB_SERVER_URL }}"
+          echo "GITHUB_SHA: ${{ env.GITHUB_SHA }}"
+          echo "GITHUB_WORKFLOW: ${{ env.GITHUB_WORKFLOW }}"
+          echo "GITHUB_WORKSPACE: ${{ env.GITHUB_WORKSPACE }}"
+          
+
