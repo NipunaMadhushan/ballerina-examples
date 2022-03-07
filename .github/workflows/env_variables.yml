@@ -42,8 +42,9 @@ jobs:
           echo "GITHUB_SHA: $GITHUB_SHA"
           echo "GITHUB_WORKFLOW: $GITHUB_WORKFLOW"
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository.owner }}"
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository-owner }}"
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}"
-          
+          echo $GITHUB_REPOSITORY_OWNER
 
