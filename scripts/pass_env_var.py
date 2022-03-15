@@ -1,3 +1,3 @@
-import os
-
-os.environ['MY_NAME'] = 'NipunaMadhushan'
+with open('failed_module.txt', 'w') as f:
+    f.writelines("my-name-is-nipuna")
+    f.close()
