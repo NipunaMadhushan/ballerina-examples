@@ -20,6 +20,7 @@ jobs:
       - name: Set Env Variable
         run: |
           python scripts/pass_env_var.py
+          echo $MY_NAME
       
       - name: Get Env Variable
         run: |
