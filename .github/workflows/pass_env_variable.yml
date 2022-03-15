@@ -23,6 +23,6 @@ jobs:
       
       - name: Get Env Variable
         run: |
-          MODULE = $(( cat failed_module.txt ))
+          MODULE = $( cat failed_module.txt )
           echo $MODULE
           
