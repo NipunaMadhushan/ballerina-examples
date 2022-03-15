@@ -25,5 +25,5 @@ jobs:
       
       - name: Get Env Variable
         run: |
-          echo ${{ steps.set-module.outputs.version }}
+          echo ${{ steps.set-module.outputs.module }}
           
