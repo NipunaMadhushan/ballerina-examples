@@ -1,0 +1,28 @@
+name: Environment Variables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    name: Pass Env Variable Value
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Set Env Variable
+        run: |
+          python scripts/pass_env_var.py
+      
+      - name: Get Env Variable
+        run: |
+          echo "$MY_NAME"
+        env:
+          MY_NAME: ${{ env.MY_NAME }}
