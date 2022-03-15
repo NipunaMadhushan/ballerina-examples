@@ -20,11 +20,7 @@ jobs:
       - name: Set Env Variable
         run: |
           python scripts/pass_env_var.py
-          echo $MY_NAME
-          python scripts/get_env_var.py
       
       - name: Get Env Variable
         run: |
-          echo "$MY_NAME"
-        env:
-          MY_NAME: ${{ env.MY_NAME }}
+          cat failed_module.txt
