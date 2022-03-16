@@ -18,13 +18,12 @@ jobs:
           python-version: '3.x'
 
       - name: Set Env Variable
+        id: set-module
         run: |
           python scripts/pass_env_var.py
-          echo $MY_NAME
-          python scripts/get_env_var.py
+          echo "::set-output name=module::$(cat failed_module.txt)"
       
       - name: Get Env Variable
         run: |
-          echo "$MY_NAME"
-        env:
-          MY_NAME: ${{ env.MY_NAME }}
+          echo ${{ steps.set-module.outputs.module }}
+          
