@@ -1,4 +1,4 @@
-name: Pass Environment Variables
+name: Build Standard Libraries
 
 on:
   workflow_dispatch:
