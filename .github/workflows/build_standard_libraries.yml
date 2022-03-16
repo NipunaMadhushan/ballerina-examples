@@ -1,0 +1,82 @@
+name: Pass Environment Variables
+
+on:
+  workflow_dispatch:
+    inputs:
+      lang_version:
+        description: 'Lang Version'
+        deprecationMessage: 'ex: 2201.0.0'
+        required: true
+        default: '2201.0.0'
+
+jobs:
+  build-module:
+    name: Build Standrd Library
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module:
+          - module-ballerina-io
+          - module-ballerina-xmldata
+          - module-ballerina-random
+          - module-ballerina-url
+          - module-ballerina-regex
+          - module-ballerina-time
+          - module-ballerina-jballerina.java.arrays
+          - module-ballerina-task
+          - module-ballerina-crypto
+          - module-ballerina-log
+          - module-ballerina-protobuf
+          - module-ballerina-xslt
+          - module-ballerina-os
+          - module-ballerina-uuid
+          - module-ballerina-cache
+          - module-ballerina-ftp
+          - module-ballerinax-nats
+          - module-ballerina-tcp
+          - module-ballerina-stan
+          - module-ballerina-udp
+          - module-ballerina-file
+          - module-ballerina-mime
+          - module-ballerina-email
+          - module-ballerina-jwt
+          - module-ballerina-oauth2
+          - module-ballerina-auth
+          - module-ballerina-http
+          - module-ballerina-websub
+          - module-ballerina-websubhub
+          - module-ballerina-grpc
+          - module-ballerinai-transaction
+          - module-ballerina-graphql
+          - module-ballerina-websocket
+          - module-ballerinax-kafka
+          - module-ballerina-sql
+          - module-ballerinax-rabbitmq
+          - module-ballerinax-postgresql
+          - module-ballerinax-oracledb
+          - module-ballerinax-mysql
+          - module-ballerinax-mssql
+          - module-ballerinax-java.jdbc
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Change Lang Version
+        run: |
+          echo "Lang Version: ${{ github.event.inputs.lang_version }}"
+          python scripts/change_version.py ${{ matrix.module }} ${{ github.event.inputs.lang_version }}
+          
+      - name: Build Module
+        run: |
+          cd ${{ matrix.module }};./gradlew clean build --scan --stacktrace
+        env:
+          BALLERINA_BOT_USERNAME: ${{ secrets.BALLERINA_BOT_USERNAME }}
+          BALLERINA_BOT_TOKEN: ${{ secrets.BALLERINA_BOT_TOKEN }}
+
