@@ -11,10 +11,8 @@ stdlib_module_versions = dict()
 enable_tests = 'true'
 exit_code = 0
 
-#ballerina_bot_username = os.environ['BALLERINA_BOT_USERNAME']
-#ballerina_bot_token = os.environ['BALLERINA_BOT_TOKEN']
-ballerina_bot_username = "NipunaMadhushan"
-ballerina_bot_token = "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"
+ballerina_bot_username = os.environ['BALLERINA_BOT_USERNAME']
+ballerina_bot_token = os.environ['BALLERINA_BOT_TOKEN']
 
 
 def main():
