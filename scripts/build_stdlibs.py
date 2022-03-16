@@ -28,8 +28,8 @@ def main():
 
     read_stdlib_modules()
     if stdlib_modules_by_level:
-        #clone_repositories()
-        #change_version_to_snapshot()
+        clone_repositories()
+        change_version_to_snapshot()
         build_stdlib_repositories(enable_tests)
     else:
         print('Could not find standard library dependency data from', stdlib_modules_json_file)
