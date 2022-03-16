@@ -35,7 +35,7 @@ jobs:
           - module-ballerina-ftp
           - module-ballerinax-nats
           - module-ballerina-tcp
-          - module-ballerina-stan
+          - module-ballerinax-stan
           - module-ballerina-udp
           - module-ballerina-file
           - module-ballerina-mime
