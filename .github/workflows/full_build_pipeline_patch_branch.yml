@@ -1,4 +1,4 @@
-name: Build BBEs
+name: Full Build Pipeline (patch branch)
 
 on:
   workflow_dispatch:
