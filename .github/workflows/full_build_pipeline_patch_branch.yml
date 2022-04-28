@@ -19,7 +19,7 @@ on:
 
 jobs:
   initialize-matrix:
-    name: Initialize Strategy Matrix
+    name: Initialize Build Modules
     runs-on: ubuntu-latest
 
     steps:
