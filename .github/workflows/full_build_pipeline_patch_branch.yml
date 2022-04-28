@@ -74,13 +74,17 @@ jobs:
         run: |
           perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ${{ matrix.module }}/gradle.properties
 
+      - name: Build ballerina-lang
+        run: |
+          cd ballerina-lang
+          ./gradlew clean build -x test publishToMavenLocal --stacktrace --scan
       - name: Build Module
         run: |
+          cd ${{ matrix.module }}
           testsEnabled=" -x test"
           if [ "${{ github.event.inputs.enable_tests }}" == "true" ]; then testsEnabled="" && echo "Tests are Enabled"; else echo "Tests are Disabled"; fi
-          cd ${{ matrix.module }}
           echo "./gradlew clean build${testsEnabled} --scan --stacktrace"
-          ./gradlew clean build${testsEnabled} --scan --stacktrace
+          ./gradlew clean build${testsEnabled} --stacktrace --scan
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
