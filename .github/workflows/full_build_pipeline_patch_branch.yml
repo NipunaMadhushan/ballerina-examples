@@ -77,7 +77,7 @@ jobs:
       - name: Build Module
         run: |
           testsEnabled=" -x test"
-          if [ "${{ github.event.inputs.enable_tests }}" == "true" ]; then $testsEnabled="" && echo "Tests are Enabled"; fi
+          if [ "${{ github.event.inputs.enable_tests }}" == "true" ]; then $testsEnabled="" && echo "Tests are Enabled"; else echo "Tests are Disabled"; fi
           cd ${{ matrix.module }}
           ./gradlew clean build${testsEnabled} --scan --stacktrace
         env:
