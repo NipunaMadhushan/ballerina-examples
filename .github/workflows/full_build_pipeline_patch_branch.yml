@@ -64,6 +64,21 @@ jobs:
       - name: Clone Module
         run: git clone https://github.com/ballerina-platform/${{ matrix.module }}.git
 
+      - name: Get Lang Version
+        id: lang-version
+        run: |
+          VERSION=$((grep -w "version" | cut -d= -f2) < ballerina-lang/gradle.properties)
+          echo "::set-output name=version::$VERSION"
+
+      - name: Update Lang Version in Module
+        run: |
+          perl -pi -e "s/^\s*installerVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ${{ matrix.module }}/gradle.properties
+
+      - name: Check lang version update
+        run: |
+          VERSION=$((grep -w "ballerinaLangVersion" | cut -d= -f2) < ${{ matrix.module }}/gradle.properties)
+          echo "$VERSION"
+          echo "${{ steps.lang-version.outputs.version }}"
 #      - name: Change Ballerina Lang Version
 #        run: |
 #
