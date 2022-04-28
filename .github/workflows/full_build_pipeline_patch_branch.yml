@@ -79,6 +79,7 @@ jobs:
           testsEnabled=" -x test"
           if [ "${{ github.event.inputs.enable_tests }}" == "true" ]; then $testsEnabled="" && echo "Tests are Enabled"; else echo "Tests are Disabled"; fi
           cd ${{ matrix.module }}
+          echo "./gradlew clean build${testsEnabled} --scan --stacktrace"
           ./gradlew clean build${testsEnabled} --scan --stacktrace
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
