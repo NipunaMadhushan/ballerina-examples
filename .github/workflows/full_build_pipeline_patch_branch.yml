@@ -34,7 +34,7 @@ jobs:
         run: |
           MODULE_DATA_FILE="extensions.json"
           modules="["
-          for moduleName in $(jq '.standard_library| .[] | .name' $MODULE_DATA_FILE); do  modules="${modules}${moduleName}, "; done
+          for moduleName in $(jq '.standard_library| .[] | .name' $MODULE_DATA_FILE); do modules="${modules}${moduleName}, "; done
           modules="${modules/%??/}]"
           echo "::set-output name=modules::${modules}"
 
@@ -77,7 +77,7 @@ jobs:
       - name: Build Module
         run: |
           testsEnabled=" -x test"
-          if [ "${{ github.event.inputs.enable_tests }}" == "false" ]; do $testsEnabled=""; done
+          if [ "${{ github.event.inputs.enable_tests }}" == "false" ]; then $testsEnabled=""; done
           cd ${{ matrix.module }}
           ./gradlew clean build${testsEnabled} --scan --stacktrace
         env:
