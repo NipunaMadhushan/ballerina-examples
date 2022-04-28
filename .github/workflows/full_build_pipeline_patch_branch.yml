@@ -74,11 +74,13 @@ jobs:
         run: |
           perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ${{ matrix.module }}/gradle.properties
 
-      - name: Check lang version update
+      - name: Build Module
         run: |
-          VERSION=$((grep -w "ballerinaLangVersion" | cut -d= -f2) < ${{ matrix.module }}/gradle.properties)
-          echo "$VERSION"
-          echo "${{ steps.lang-version.outputs.version }}"
-#      - name: Change Ballerina Lang Version
-#        run: |
-#
+          testsEnabled=" -x test"
+          if [ "${{ github.event.inputs.enable_tests }}" == "false" ]; do $testsEnabled=""; done
+          cd ${{ matrix.module }}
+          ./gradlew clean build${testsEnabled} --scan --stacktrace
+        env:
+          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+          packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
+#          devCentralToken: ${{ secrets.BALLERINA_DEV_CENTRAL_ACCESS_TOKEN }}
