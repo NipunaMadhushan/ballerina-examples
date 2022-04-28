@@ -1,0 +1,66 @@
+name: Build BBEs
+
+on:
+  workflow_dispatch:
+    inputs:
+      ballerina_lang_branch:
+        description: 'Ballerina-lang branch'
+        required: true
+        default: 'master'
+      enable_tests:
+        type: choice
+        description: 'Enable Tests'
+        deprecationMessage: 'true or false'
+        required: true
+        options:
+          - 'true'
+          - 'false'
+        default: 'true'
+
+jobs:
+  initialize-matrix:
+    name: Initialize Strategy Matrix
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Download Module Data
+        run: |
+          wget https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/extensions.json
+      - name: Create Strategy Matrix
+        id: set-matrix
+        run: |
+          MODULE_DATA_FILE="extensions.json"
+          modules="["
+          for moduleName in $(jq '.standard_library| .[] | .name' $MODULE_DATA_FILE); do  modules="${modules}${moduleName}, "; done
+          modules="${modules/%??/}]"
+          echo "::set-output name=modules::${modules}"
+
+    outputs:
+      modules: ${{ steps.set-matrix.outputs.modules }}
+
+  build-module:
+    needs: initialize-matrix
+    name: Build Module
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: ${{fromJson(needs.initialize-matrix.outputs.modules)}}
+
+    steps:
+      - name: Echo Module Name
+        run: echo ${{ matrix.module }}
+
+      - name: Clone Ballerina Lang Repository
+        run: |
+          git clone https://github.com/${{ github.repository_owner }}/ballerina-lang.git
+          git checkout ${{ github.event.inputs.ballerina_lang_branch }}
+
+      - name: Clone Module
+        run: https://github.com/ballerina-platform/${{ matrix.module }}.git
+
+#      - name: Change Ballerina Lang Version
+#        run: |
+#
