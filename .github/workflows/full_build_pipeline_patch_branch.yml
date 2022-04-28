@@ -60,7 +60,7 @@ jobs:
           git checkout ${{ github.event.inputs.ballerina_lang_branch }}
 
       - name: Clone Module
-        run: https://github.com/ballerina-platform/${{ matrix.module }}.git
+        run: git https://github.com/ballerina-platform/${{ matrix.module }}.git
 
 #      - name: Change Ballerina Lang Version
 #        run: |
