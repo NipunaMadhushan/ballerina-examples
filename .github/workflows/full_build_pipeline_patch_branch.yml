@@ -54,10 +54,10 @@ jobs:
         run: echo ${{ matrix.module }}
 
       - name: Clone Ballerina Lang Repository
-        run: |
-          git clone https://github.com/${{ github.repository_owner }}/ballerina-lang.git
-          cd ballerina-lang;git checkout ${{ github.event.inputs.ballerina_lang_branch }}
+        run: git clone https://github.com/${{ github.repository_owner }}/ballerina-lang.git
 
+      - name: Checkout To Lang Branch
+        run:
       - name: Clone Module
         run: git https://github.com/ballerina-platform/${{ matrix.module }}.git
 
