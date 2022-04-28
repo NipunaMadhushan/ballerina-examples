@@ -56,8 +56,7 @@ jobs:
       - name: Clone Ballerina Lang Repository
         run: |
           git clone https://github.com/${{ github.repository_owner }}/ballerina-lang.git
-          cd ballerina-lang
-          git checkout ${{ github.event.inputs.ballerina_lang_branch }}
+          cd ballerina-lang;git checkout ${{ github.event.inputs.ballerina_lang_branch }}
 
       - name: Clone Module
         run: git https://github.com/ballerina-platform/${{ matrix.module }}.git
