@@ -72,7 +72,7 @@ jobs:
 
       - name: Update Lang Version in Module
         run: |
-          perl -pi -e "s/^\s*installerVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ${{ matrix.module }}/gradle.properties
+          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ${{ matrix.module }}/gradle.properties
 
       - name: Check lang version update
         run: |
