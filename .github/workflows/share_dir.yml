@@ -47,14 +47,15 @@ jobs:
 
       - name: Check .m2 Dir
         run: |
-          cd .m2
+          ls -a
+          cd ~/.m2
           ls -a
 
       - name: Archive Lang Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Ballerina Lang Artifacts
-          path: .m2/*
+          path: ~/.m2/
 
     outputs:
       lang_version: ${{ steps.lang-version.outputs.version }}
