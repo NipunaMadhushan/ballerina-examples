@@ -34,10 +34,21 @@ jobs:
         id: set-matrix
         run: |
           MODULE_DATA_FILE="extensions.json"
-          modules="["
-          for moduleName in $(jq '.standard_library| .[] | select(.level==1)| .name' $MODULE_DATA_FILE); do modules="${modules}${moduleName}, "; done
-          modules="${modules/%??/}]"
-          echo "::set-output name=modules::${modules}"
+
+          modules_l1="["
+          for moduleName in $(jq '.standard_library| .[] | select(.level==1)| .name' $MODULE_DATA_FILE); do modules="${modules_l1}${moduleName}, "; done
+          modules_l1="${modules_l1/%??/}]"
+          echo "::set-output name=modules_l1::${modules_l1}"
+
+          modules_l2="["
+          for moduleName in $(jq '.standard_library| .[] | select(.level==2)| .name' $MODULE_DATA_FILE); do modules="${modules_l2}${moduleName}, "; done
+          modules_l2="${modules_l2/%??/}]"
+          echo "::set-output name=modules_l2::${modules_l2}"
+
+          modules_l3="["
+          for moduleName in $(jq '.standard_library| .[] | select(.level==3)| .name' $MODULE_DATA_FILE); do modules="${modules_l3}${moduleName}, "; done
+          modules_l3="${modules_l3/%??/}]"
+          echo "::set-output name=modules_l3::${modules_l3}"
 
       - name: Clone Ballerina Lang Repository
         run: git clone https://github.com/${{ github.repository_owner }}/ballerina-lang.git
@@ -65,16 +76,18 @@ jobs:
           path: ~/.m2/
 
     outputs:
-      modules: ${{ steps.set-matrix.outputs.modules }}
       lang_version: ${{ steps.lang-version.outputs.version }}
+      modules_l1: ${{ steps.set-matrix.outputs.modules_l1 }}
+      modules_l2: ${{ steps.set-matrix.outputs.modules_l2 }}
+      modules_l3: ${{ steps.set-matrix.outputs.modules_l3 }}
 
-  build-module:
+  build-module-l1:
     needs: build-lang
-    name: Build Module
+    name: Build Level 1 Module
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        module: ${{fromJson(needs.build-lang.outputs.modules)}}
+        module: ${{fromJson(needs.build-lang.outputs.modules_l1)}}
 
     steps:
       - name: Checkout Repository
@@ -106,4 +119,83 @@ jobs:
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
+
+  build-module-l2:
+    needs: build-module-l1
+    name: Build Level 2 Module
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: ${{fromJson(needs.build-lang.outputs.modules_l2)}}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Echo Module Name
+        run: echo ${{ matrix.module }}
+
+      - name: Download Ballerina Lang Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Ballerina Lang Artifacts
+          path: ~/.m2/
+
+      - name: Clone Module
+        run: git clone https://github.com/ballerina-platform/${{ matrix.module }}.git
+
+      - name: Update Lang Version in Module
+        run: |
+          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ needs.build-lang.outputs.lang_version }}/" ${{ matrix.module }}/gradle.properties
+
+      - name: Build Module
+        run: |
+          cd ${{ matrix.module }}
+          testsEnabled=" -x test"
+          if [ "${{ github.event.inputs.enable_tests }}" == "true" ]; then testsEnabled="" && echo "Tests are Enabled"; else echo "Tests are Disabled"; fi
+          echo "./gradlew clean build${testsEnabled} --scan --stacktrace"
+          ./gradlew clean build${testsEnabled} --stacktrace --scan
+        env:
+          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+          packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
+
+  build-module-l3:
+    needs: build-module-l2
+    name: Build Level 3 Module
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module: ${{fromJson(needs.build-lang.outputs.modules_l3)}}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Echo Module Name
+        run: echo ${{ matrix.module }}
+
+      - name: Download Ballerina Lang Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Ballerina Lang Artifacts
+          path: ~/.m2/
+
+      - name: Clone Module
+        run: git clone https://github.com/ballerina-platform/${{ matrix.module }}.git
+
+      - name: Update Lang Version in Module
+        run: |
+          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ needs.build-lang.outputs.lang_version }}/" ${{ matrix.module }}/gradle.properties
+
+      - name: Build Module
+        run: |
+          cd ${{ matrix.module }}
+          testsEnabled=" -x test"
+          if [ "${{ github.event.inputs.enable_tests }}" == "true" ]; then testsEnabled="" && echo "Tests are Enabled"; else echo "Tests are Disabled"; fi
+          echo "./gradlew clean build${testsEnabled} --scan --stacktrace"
+          ./gradlew clean build${testsEnabled} --stacktrace --scan
+        env:
+          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+          packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
+
 #          devCentralToken: ${{ secrets.BALLERINA_DEV_CENTRAL_ACCESS_TOKEN }}
