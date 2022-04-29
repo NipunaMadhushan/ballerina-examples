@@ -19,7 +19,7 @@ on:
 
 jobs:
   build-lang:
-    name: Initialize Build Modules
+    name: Build Ballerina Lang
     runs-on: ubuntu-latest
 
     steps:
