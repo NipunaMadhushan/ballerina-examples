@@ -18,7 +18,7 @@ on:
         default: 'true'
 
 jobs:
-  initialize-matrix:
+  build-lang:
     name: Initialize Build Modules
     runs-on: ubuntu-latest
 
@@ -29,6 +29,7 @@ jobs:
       - name: Download Module Data
         run: |
           wget https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/extensions.json
+
       - name: Create Strategy Matrix
         id: set-matrix
         run: |
@@ -38,16 +39,42 @@ jobs:
           modules="${modules/%??/}]"
           echo "::set-output name=modules::${modules}"
 
+      - name: Clone Ballerina Lang Repository
+        run: git clone https://github.com/${{ github.repository_owner }}/ballerina-lang.git
+
+      - name: Checkout To Lang Branch
+        run: |
+          cd ballerina-lang
+          git checkout ${{ github.event.inputs.ballerina_lang_branch }}
+
+      - name: Get Lang Version
+        id: lang-version
+        run: |
+          VERSION=$((grep -w "version" | cut -d= -f2) < ballerina-lang/gradle.properties)
+          echo "::set-output name=version::$VERSION"
+
+      - name: Build ballerina-lang
+        run: |
+          cd ballerina-lang
+          ./gradlew clean build -x check publishToMavenLocal --stacktrace --scan
+
+      - name: Archive Lang Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Ballerina Lang Artifacts
+          path: ~/.m2/
+
     outputs:
       modules: ${{ steps.set-matrix.outputs.modules }}
+      lang_version: ${{ steps.lang-version.outputs.version }}
 
   build-module:
-    needs: initialize-matrix
+    needs: build-lang
     name: Build Module
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        module: ${{fromJson(needs.initialize-matrix.outputs.modules)}}
+        module: ${{fromJson(needs.build-lang.outputs.modules)}}
 
     steps:
       - name: Checkout Repository
@@ -56,13 +83,11 @@ jobs:
       - name: Echo Module Name
         run: echo ${{ matrix.module }}
 
-      - name: Clone Ballerina Lang Repository
-        run: git clone https://github.com/${{ github.repository_owner }}/ballerina-lang.git
-
-      - name: Checkout To Lang Branch
-        run: |
-          cd ballerina-lang
-          git checkout ${{ github.event.inputs.ballerina_lang_branch }}
+      - name: Download Ballerina Lang Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Ballerina Lang Artifacts
+          path: ~/.m2/
 
       - name: Clone Module
         run: git clone https://github.com/ballerina-platform/${{ matrix.module }}.git
@@ -75,7 +100,7 @@ jobs:
 
       - name: Update Lang Version in Module
         run: |
-          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ${{ matrix.module }}/gradle.properties
+          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ needs.build-lang.outputs.lang_version }}/" ${{ matrix.module }}/gradle.properties
 
       - name: Build ballerina-lang
         run: |
