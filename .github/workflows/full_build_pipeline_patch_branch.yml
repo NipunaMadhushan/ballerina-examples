@@ -35,7 +35,7 @@ jobs:
         run: |
           MODULE_DATA_FILE="extensions.json"
           modules="["
-          for moduleName in $(jq '.standard_library| .[] | .name' $MODULE_DATA_FILE); do modules="${modules}${moduleName}, "; done
+          for moduleName in $(jq '.standard_library| .[] | select(.level==1)| .name' $MODULE_DATA_FILE); do modules="${modules}${moduleName}, "; done
           modules="${modules/%??/}]"
           echo "::set-output name=modules::${modules}"
 
