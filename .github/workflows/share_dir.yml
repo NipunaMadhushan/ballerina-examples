@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Ballerina Lang Artifacts
-          path: .m2
+          path: .m2/
 
     outputs:
       lang_version: ${{ steps.lang-version.outputs.version }}
