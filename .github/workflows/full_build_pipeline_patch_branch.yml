@@ -1,4 +1,4 @@
-name: Pass Artifacts Between Jobs
+name: Full Build Pipeline (patch branch)
 
 on:
   workflow_dispatch:
