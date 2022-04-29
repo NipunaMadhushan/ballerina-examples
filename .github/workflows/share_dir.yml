@@ -6,7 +6,7 @@ on:
       ballerina_lang_branch:
         description: 'Ballerina-lang branch'
         required: true
-        default: 'master'
+        default: '2201.0.x'
       enable_tests:
         type: choice
         description: 'Enable Tests'
@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Ballerina Lang Artifacts
-          path: .m2/
+          path: .m2/*
 
     outputs:
       lang_version: ${{ steps.lang-version.outputs.version }}
