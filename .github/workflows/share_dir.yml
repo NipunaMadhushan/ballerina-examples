@@ -45,6 +45,11 @@ jobs:
           cd ballerina-lang
           ./gradlew clean build -x check publishToMavenLocal --stacktrace --scan
 
+      - name: Check .m2 Dir
+        run: |
+          cd .m2
+          ls -a
+
       - name: Archive Lang Artifacts
         uses: actions/upload-artifact@v2
         with:
