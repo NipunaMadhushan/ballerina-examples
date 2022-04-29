@@ -96,10 +96,6 @@ jobs:
         run: |
           perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ needs.build-lang.outputs.lang_version }}/" ${{ matrix.module }}/gradle.properties
 
-      - name: Build ballerina-lang
-        run: |
-          cd ballerina-lang
-          ./gradlew clean build -x check publishToMavenLocal --stacktrace --scan
       - name: Build Module
         run: |
           cd ${{ matrix.module }}
