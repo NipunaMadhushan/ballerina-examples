@@ -50,6 +50,9 @@ jobs:
         module: ${{fromJson(needs.initialize-matrix.outputs.modules)}}
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
       - name: Echo Module Name
         run: echo ${{ matrix.module }}
 
