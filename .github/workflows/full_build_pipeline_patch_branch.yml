@@ -36,18 +36,17 @@ jobs:
           MODULE_DATA_FILE="extensions.json"
 
           modules_l1="["
-          for moduleName in $(jq '.standard_library| .[] | select(.level==1)| .name' $MODULE_DATA_FILE); do modules="${modules_l1}${moduleName}, "; done
+          for moduleName in $(jq '.standard_library| .[] | select(.level==1)| .name' $MODULE_DATA_FILE); do modules_l1="${modules_l1}${moduleName}, "; done
           modules_l1="${modules_l1/%??/}]"
           echo "::set-output name=modules_l1::${modules_l1}"
-          echo "${modules_l1}"
 
           modules_l2="["
-          for moduleName in $(jq '.standard_library| .[] | select(.level==2)| .name' $MODULE_DATA_FILE); do modules="${modules_l2}${moduleName}, "; done
+          for moduleName in $(jq '.standard_library| .[] | select(.level==2)| .name' $MODULE_DATA_FILE); do modules_l2="${modules_l2}${moduleName}, "; done
           modules_l2="${modules_l2/%??/}]"
           echo "::set-output name=modules_l2::${modules_l2}"
 
           modules_l3="["
-          for moduleName in $(jq '.standard_library| .[] | select(.level==3)| .name' $MODULE_DATA_FILE); do modules="${modules_l3}${moduleName}, "; done
+          for moduleName in $(jq '.standard_library| .[] | select(.level==3)| .name' $MODULE_DATA_FILE); do modules_l3="${modules_l3}${moduleName}, "; done
           modules_l3="${modules_l3/%??/}]"
           echo "::set-output name=modules_l3::${modules_l3}"
 
