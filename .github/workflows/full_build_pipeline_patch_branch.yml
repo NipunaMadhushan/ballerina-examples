@@ -50,11 +50,6 @@ jobs:
           modules_l3="${modules_l3/%??/}]"
           echo "::set-output name=modules_l3::${modules_l3}"
 
-          modules_l3="["
-          for moduleName3 in $(jq '.standard_library| .[] | select(.level==3)| .name' $MODULE_DATA_FILE); do modules_l3="${modules_l3}${moduleName3}, "; done
-          modules_l3="${modules_l3/%??/}]"
-          echo "::set-output name=modules_l3::${modules_l3}"
-
           modules_l4="["
           for moduleName4 in $(jq '.standard_library| .[] | select(.level==4)| .name' $MODULE_DATA_FILE); do modules_l4="${modules_l4}${moduleName4}, "; done
           modules_l4="${modules_l4/%??/}]"
