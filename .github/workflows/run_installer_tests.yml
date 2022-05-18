@@ -1,0 +1,50 @@
+macos-installer-build:
+    name: MacOS Installer Build
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Download MacOS Intaller Zip
+        run: |
+          wget https://github.com/ballerina-platform/ballerina-distribution/releases/download/v2201.1.0-rc2/ballerina-2201.1.0-swan-lake-macos-x64.pkg
+      - name: Install Ballerina PKG
+        run: sudo installer -pkg installers/mac/target/pkg/ballerina-*-macos-x64.pkg -target /
+      - name: Clone Ballerina Distribution
+        run: git clone https://github.com/ballerina-platform/ballerina-distribution.git
+      - name: Run Installer Tests
+        working-directory: ./ballerina-distribution/ballerina-test-automation/installer-test
+        run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
+        env:
+          TEST_MODE_ACTIVE: true
+
+windows-installer-build:
+    name: Windows Installer Build
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '2.1.x'
+      - name: Install GUID Generator
+        run: dotnet tool install -g dotnet-guid
+      - name: Install Wget
+        run: choco install wget --no-progress
+      - name: Download Windows Intaller Zip
+        run: |
+          wget https://github.com/ballerina-platform/ballerina-distribution/releases/download/v2201.1.0-rc2/ballerina-2201.1.0-swan-lake-windows-x64.msi
+      - name: Install Ballerina msi
+        run: msiexec /i ballerina-2201.1.0-swan-lake-windows-x64.msi /quiet /qr
+        shell: cmd
+      - name: Clone Ballerina Distribution
+        run: git clone https://github.com/ballerina-platform/ballerina-distribution.git
+      - name: Run Installer Tests
+        working-directory: .\ballerina-distribution\ballerina-test-automation\installer-test
+        run: |
+          $env:Path += ";C:\Program Files\Ballerina\bin"
+          .\..\gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
+        env:
+          TEST_MODE_ACTIVE: true
+    
