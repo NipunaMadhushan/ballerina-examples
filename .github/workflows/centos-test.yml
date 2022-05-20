@@ -1,4 +1,4 @@
-name: Full Build Pipeline
+name: CentOS Install Git
 
 on:
   workflow_dispatch:
