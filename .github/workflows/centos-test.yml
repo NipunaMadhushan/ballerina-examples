@@ -28,4 +28,6 @@ jobs:
           sudo dnf install git -y
       - name: Download Ballerina Distribution
         run: git clone https://github.com/ballerina-platform/ballerina-distribution.git
-   
+      - name: Build Distribution
+        working-directory: ./ballerina-distribution
+        run: ./gradlew clean build --scan
