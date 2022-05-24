@@ -21,6 +21,6 @@ jobs:
         run: echo ${{ matrix.branch }}
       
       - name: Test If Condition
-        if: ${{ matrix.branch }} == '2201.0.x'
+        if: matrix.branch == '2201.0.x'
         run:  echo "If condition works."
 
