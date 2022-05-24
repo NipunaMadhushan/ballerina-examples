@@ -1,0 +1,26 @@
+name: Multiple Branches
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    strategy:
+      matrix:
+        branch:
+          - master
+          - 2201.0.x
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Echo Name
+        run: echo ${{ matrix.branch }}
+      
+      - name: Test If Condition
+        if: ${{ matrix.branch }} == '2201.0.x'
+        run:  echo "If condition works."
+
