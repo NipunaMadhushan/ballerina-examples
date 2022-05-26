@@ -41,7 +41,7 @@ jobs:
           for module_name in $(jq -r '.standard_library | .[] | select(.level<8) | .name' $MODULE_DATA_FILE); \
           do version_key=$(jq -r ".standard_library | .[] | select(.name==\"$module_name\") | .version_key" $MODULE_DATA_FILE) && \
           version=$((grep -w $version_key | cut -d= -f2) < $PROPERTIES_FILE) && \
-          module_data="{\"name\": \"$module_name\", \"version\": \"$version}\"" && \
+          module_data="{\"name\": \"$module_name\", \"version\": \"$version\"}" && \
           echo $module_data && \
           modules="${modules}${module_data}, "; \
           done
