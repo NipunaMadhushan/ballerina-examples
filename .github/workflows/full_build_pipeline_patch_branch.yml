@@ -34,13 +34,17 @@ jobs:
         id: set-matrix
         run: |
           MODULE_DATA_FILE="extensions.json"
+          PROPERTIES_FILE="gradle.properties"
 
           modules="["
-          for module in $(jq '.standard_library| .[]' $MODULE_DATA_FILE); \
-          do module_name=$(module | jq '.name') && \
-          echo $module_name && \
-          modules="${modules}${module_name}, "; \
+          for module_name in $(jq '.standard_library | .[] | .name' $MODULE_DATA_FILE); \
+          do echo $module_name && \
+          version_key=$(jq ".standard_library | .[] | select(.name==$module_name) | .version_key" $MODULE_DATA_FILE) && \
+          echo $version_key && \
+          version=$((grep -w $version_key | cut -d= -f2 | cut -d- -f1) < $PROPERTIES_FILE); \
+          echo $version; \
           done
+
           modules="${modules/%??/}]"
           echo "::set-output name=modules::${modules}"
 
@@ -109,6 +113,5 @@ jobs:
 #        env:
 #          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
 #          packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
-#
 
 #          devCentralToken: ${{ secrets.BALLERINA_DEV_CENTRAL_ACCESS_TOKEN }}
