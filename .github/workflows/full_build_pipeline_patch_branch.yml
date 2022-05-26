@@ -74,6 +74,7 @@ jobs:
     name: Build Module
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         module: ${{fromJson(needs.build-lang.outputs.modules)}}
 
