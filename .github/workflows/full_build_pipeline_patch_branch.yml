@@ -42,7 +42,7 @@ jobs:
           do echo $module_name && \
           version_key=$(jq ".standard_library | .[] | select(.name==$module_name) | .version_key" $MODULE_DATA_FILE) && \
           echo $version_key && \
-          version=$((grep -w $version_key | cut -d= -f2 | cut -d- -f1) < $PROPERTIES_FILE); \
+          version=$((grep -w $version_key) < $PROPERTIES_FILE); \
           echo $version; \
           done
 
