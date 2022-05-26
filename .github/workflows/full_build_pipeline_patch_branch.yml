@@ -78,6 +78,19 @@ jobs:
       lang_version: ${{ steps.lang-version.outputs.version }}
       modules: ${{ steps.set-matrix.outputs.modules }}
 
+  test-output:
+    needs: build-lang
+    name: Test Output
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Check Output
+        run: |
+          echo ${{ needs.build-lang.outputs.modules }}
+
   build-module:
     needs: build-lang
     name: Build Module
@@ -99,6 +112,13 @@ jobs:
 
       - name: Clone Module
         run: git clone https://github.com/ballerina-platform/${{ matrix.module.name }}.git
+
+      - name: Checkout to Branch
+        working-directory: ./${{ matrix.module.name }}
+        run: |
+          version_split=($(echo $version | tr "-" "\n"))
+          length=${#version_split[@]}
+          echo $length
 
       - name: Update Lang Version in Module
         working-directory: ./${{ matrix.module.name }}
