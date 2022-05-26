@@ -78,19 +78,6 @@ jobs:
       lang_version: ${{ steps.lang-version.outputs.version }}
       modules: ${{ steps.set-matrix.outputs.modules }}
 
-  test-output:
-    needs: build-lang
-    name: Test Output
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Check Output
-        run: |
-          echo ${{ needs.build-lang.outputs.modules }}
-
   build-module:
     needs: build-lang
     name: Build Module
@@ -116,12 +103,12 @@ jobs:
       - name: Checkout to Branch
         working-directory: ./${{ matrix.module.name }}
         run: |
-          version_split=($(echo $version | tr "-" "\n"))
+          version_split=($(echo ${{ matrix.module.version }} | tr "-" "\n"))
           length=${#version_split[@]}
 
           if [ $(($length)) -gt 1 ]; \
-          then echo "true"; \
-          else echo "false"; \
+          then git checkout -b full-build ${version_split[@]:(-1)}; \
+          else git checkout v${{ matrix.module.version }}; \
           fi
 
       - name: Update Lang Version in Module
