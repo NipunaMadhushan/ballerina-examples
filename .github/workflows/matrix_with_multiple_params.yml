@@ -1,0 +1,24 @@
+name: Matrix With Multiple Params
+
+on:
+  workflow_dispatch:
+
+jobs:
+    initial_job:
+      strategy:
+        fail-fast: false
+        matrix:
+          module: [{module_name: module1, version: version1}, {module_name: module2, version: version2}]
+
+      name: Single Job
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
+
+        - name: Echo Parameters
+          run: |
+            echo ${{ matrix.module }}
+            echo ${{ matrix.module.module_name }}
+            echo ${{ matrix.module.version }}
