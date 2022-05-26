@@ -29,7 +29,6 @@ jobs:
       - name: Download Module Data
         run: |
           wget https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/extensions.json
-          wget https://raw.githubusercontent.com/ballerina-platform/ballerina-distribution/2201.0.x/gradle.properties
 
       - name: Create Strategy Matrix
         id: set-matrix
@@ -38,12 +37,12 @@ jobs:
           PROPERTIES_FILE="gradle.properties"
 
           modules="["
-          for module_name in $(jq '.standard_library | .[] | .name' $MODULE_DATA_FILE); \
-          do echo $module_name && \
-          version_key=$(jq ".standard_library | .[] | select(.name==$module_name) | .version_key" $MODULE_DATA_FILE) && \
-          echo $version_key && \
-          version=$((grep -w $version_key) < $PROPERTIES_FILE); \
-          echo $version; \
+          for module_name in $(jq -r '.standard_library | .[] | .name' $MODULE_DATA_FILE); \
+          do version_key=$(jq -r ".standard_library | .[] | select(.name==\"$module_name\") | .version_key" $MODULE_DATA_FILE) && \
+          version=$((grep -w $version_key | cut -d= -f2) < $PROPERTIES_FILE) && \
+          module_data="{name: $module_name, version: $version}" && \
+          echo $module_data && \
+          modules="${modules}${module_data}, "; \
           done
 
           modules="${modules/%??/}]"

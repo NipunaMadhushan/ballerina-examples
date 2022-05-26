@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a8dd28e3-807d-4cff-a989-47e7954e1c2e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.github/workflows/full_build_pipeline_patch_branch.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/full_build_pipeline_patch_branch.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,7 +34,7 @@
       <option name="presentableId" value="Default" />
       <updated>1645101307756</updated>
       <workItem from="1645101309735" duration="12310000" />
-      <workItem from="1653546979612" duration="5993000" />
+      <workItem from="1653546979612" duration="6690000" />
     </task>
     <servers />
   </component>
