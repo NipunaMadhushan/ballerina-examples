@@ -107,8 +107,8 @@ jobs:
           length=${#version_split[@]}
 
           if [ $(($length)) -gt 1 ]; \
-          then git checkout -b full-build ${version_split[@]:(-1)}; \
-          else git checkout v${{ matrix.module.version }}; \
+          then git checkout -b full-build ${version_split[@]:(-1)} | echo "Could not found commit ${version_split[@]:(-1)}"; \
+          else git checkout v${{ matrix.module.version }} | "Could not found branch v${{ matrix.module.version }}"; \
           fi
 
       - name: Update Lang Version in Module
