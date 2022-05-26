@@ -37,7 +37,7 @@ jobs:
 
           modules="["
           for module in $(jq '.standard_library| .[]' $MODULE_DATA_FILE); \
-          do module_name=$(jq '.name' $module) && \
+          do module_name=$(module | jq '.name') && \
           echo $module_name && \
           modules="${modules}${module_name}, "; \
           done
