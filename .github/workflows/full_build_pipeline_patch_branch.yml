@@ -146,7 +146,7 @@ jobs:
           echo "./gradlew clean build${testsEnabled} --scan --stacktrace"
           ./gradlew clean build${testsEnabled} --stacktrace --scan
         env:
-          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+          packageUser: ${{ secrets.GITHUB_TOKEN }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
 
 #          devCentralToken: ${{ secrets.BALLERINA_DEV_CENTRAL_ACCESS_TOKEN }}
