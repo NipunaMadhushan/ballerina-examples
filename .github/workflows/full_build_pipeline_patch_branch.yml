@@ -115,12 +115,12 @@ jobs:
       - name: Checkout to Branch
         working-directory: ./${{ matrix.module }}
         run: |
-          version_split=($(\"${{ steps.set-version.outputs.version }}\" | tr "-" "\n"))
+          version_split=($(${{ steps.set-version.outputs.version }} | tr "-" "\n"))
           length=${#version_split[@]}
 
           if [ $(($length)) -gt 1 ]; \
-          then git checkout -b full-build ${version_split[@]:(-1)} | echo "Could not found commit ${version_split[@]:(-1)}"; \
-          else git checkout v${{ steps.set-version.outputs.version }} | "Could not found branch v${{ steps.set-version.outputs.version }}"; \
+          then git checkout -b full-build ${version_split[@]:(-1)} || echo "Could not found commit ${version_split[@]:(-1)}"; \
+          else git checkout v${{ steps.set-version.outputs.version }} || "Could not found branch v${{ steps.set-version.outputs.version }}"; \
           fi
 
       - name: Update Lang Version in Module
