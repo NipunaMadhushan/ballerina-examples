@@ -1,0 +1,113 @@
+name: Full Build Pipeline (Level By Level)
+
+on:
+  workflow_dispatch:
+    inputs:
+      ballerina_lang_branch:
+        description: 'Ballerina-lang branch'
+        required: true
+        default: 'master'
+      enable_tests:
+        type: choice
+        description: 'Enable Tests'
+        deprecationMessage: 'true or false'
+        required: true
+        options:
+          - 'true'
+          - 'false'
+        default: 'true'
+
+jobs:
+  build-lang:
+    name: Build Ballerina Lang
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Clone Ballerina Lang Repository
+        run: git clone https://github.com/${{ github.repository_owner }}/ballerina-lang.git
+
+      - name: Checkout To Lang Branch
+        run: |
+          cd ballerina-lang
+          git checkout ${{ github.event.inputs.ballerina_lang_branch }}
+
+      - name: Get Lang Version
+        id: lang-version
+        run: |
+          VERSION=$((grep -w "version" | cut -d= -f2) < ballerina-lang/gradle.properties)
+          echo "::set-output name=version::$VERSION"
+
+      - name: Build ballerina-lang
+        run: |
+          cd ballerina-lang
+          ./gradlew clean build -x check publishToMavenLocal --stacktrace --scan
+
+      - name: Archive Lang Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Ballerina Lang Artifacts
+          path: ~/.m2/
+
+    outputs:
+      lang_version: ${{ steps.lang-version.outputs.version }}
+
+  build-stdlib-level:
+    needs: build-lang
+    name: Build Stdlib Level
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        level: [1, 2, 3, 4, 5, 6, 7]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Download Ballerina Lang Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Ballerina Lang Artifacts
+          path: ~/.m2/
+
+      - name: Download Module Data
+        run: |
+          wget https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/extensions.json
+          wget https://raw.githubusercontent.com/ballerina-platform/ballerina-distribution/2201.0.x/gradle.properties
+
+      - name: Clone Modules
+        run: |
+          for module_name in $(jq '.standard_library| .[] | select(.level==${{ matrix.module }}) | .name' extensions.json); \
+          do git clone https://github.com/ballerina-platform/${module_name}.git; \
+          done
+
+      - name: Checkout to Branch
+        run:
+          for module_name in $(jq '.standard_library| .[] | select(.level==${{ matrix.module }}) | .name' extensions.json); do
+          VERSION_KEY=$(jq -r ".standard_library | .[] | select(.name==\"$module_name\") | .version_key" extensions.json)
+          VERSION=$((grep -w $VERSION_KEY | cut -d= -f2) < gradle.properties)
+          version_split=($(echo $VERSION | tr "-" "\n"))
+          length=${#version_split[@]}
+
+          if [ $(($length)) -gt 1 ];
+          then git checkout -b full-build ${version_split[@]:(-1)} || echo "Could not found commit ${version_split[@]:(-1)}";
+          elif [ "${{ steps.set-version.outputs.version }}" != "" ];
+          then git checkout v${{ steps.set-version.outputs.version }} || "Could not found branch v${{ steps.set-version.outputs.version }}";
+          else echo "${{ matrix.module }} is not packed with distribution.";
+          fi
+
+          if [ "${{ matrix.module }}" == "module-ballerinai-transaction" ];
+          then git checkout 1.0.x || echo "Could not found branch 1.0.x";
+          fi
+
+          if [ "${{ matrix.module }}" == "module-ballerina-websubhub" ];
+          then git checkout 2201.0.x || echo "Could not found branch 2201.0.x";
+          fi
+          done
+
+
+
+
