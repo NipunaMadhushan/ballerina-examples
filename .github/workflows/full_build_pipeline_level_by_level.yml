@@ -94,16 +94,16 @@ jobs:
 
           if [ $(($length)) -gt 1 ]; \
           then git checkout -b full-build ${version_split[@]:(-1)} || echo "Could not found commit ${version_split[@]:(-1)}"; \
-          elif [ "${{ steps.set-version.outputs.version }}" != "" ]; \
-          then git checkout v${{ steps.set-version.outputs.version }} || "Could not found branch v${{ steps.set-version.outputs.version }}"; \
-          else echo "${{ matrix.module }} is not packed with distribution."; \
+          elif [ "$VERSION" != "" ]; \
+          then git checkout v$VERSION || "Could not found branch v$VERSION"; \
+          else echo "$module_name is not packed with distribution."; \
           fi && \
 
-          if [ "${{ matrix.module }}" == "module-ballerinai-transaction" ]; \
+          if [ "$module_name" == "module-ballerinai-transaction" ]; \
           then git checkout 1.0.x || echo "Could not found branch 1.0.x"; \
           fi && \
 
-          if [ "${{ matrix.module }}" == "module-ballerina-websubhub" ]; \
+          if [ "$module_name" == "module-ballerina-websubhub" ]; \
           then git checkout 2201.0.x || echo "Could not found branch 2201.0.x"; \
           fi; \
           done
