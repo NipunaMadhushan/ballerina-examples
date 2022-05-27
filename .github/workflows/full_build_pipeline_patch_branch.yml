@@ -120,7 +120,9 @@ jobs:
 
           if [ $(($length)) -gt 1 ]; \
           then git checkout -b full-build ${version_split[@]:(-1)} || echo "Could not found commit ${version_split[@]:(-1)}"; \
-          else git checkout v${{ steps.set-version.outputs.version }} || "Could not found branch v${{ steps.set-version.outputs.version }}"; \
+          elif [ "$version" != "" ]; \
+          then git checkout v${{ steps.set-version.outputs.version }} || "Could not found branch v${{ steps.set-version.outputs.version }}"; \
+          else echo "${{ matrix.module }} is not packed with distribution."; \
           fi
 
           if [ "${{ matrix.module }}" == "module-ballerinai-transaction" ]; \
