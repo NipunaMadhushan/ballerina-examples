@@ -37,7 +37,7 @@ jobs:
           PROPERTIES_FILE="gradle.properties"
 
           modules="["
-          for moduleName in $(jq '.standard_library| .[] | .name' $MODULE_DATA_FILE); \
+          for moduleName in $(jq '.standard_library| .[] | select(.level<8) | .name' $MODULE_DATA_FILE); \
           do modules="${modules}${moduleName}, "; \
           done
 
