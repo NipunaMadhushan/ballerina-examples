@@ -117,11 +117,18 @@ jobs:
         run: |
           version_split=($(echo ${{ steps.set-version.outputs.version }} | tr "-" "\n"))
           length=${#version_split[@]}
-          echo $length
 
           if [ $(($length)) -gt 1 ]; \
           then git checkout -b full-build ${version_split[@]:(-1)} || echo "Could not found commit ${version_split[@]:(-1)}"; \
           else git checkout v${{ steps.set-version.outputs.version }} || "Could not found branch v${{ steps.set-version.outputs.version }}"; \
+          fi
+
+          if [ ${{ matrix.module }} == "module-ballerinai-transaction" ]; \
+          then git checkout 1.0.x || echo "Could not found branch 1.0.x"; \
+          fi
+
+          if [ ${{ matrix.module }} == "module-ballerina-websubhub" ]; \
+          then git checkout 2201.0.x || echo "Could not found branch 2201.0.x"; \
           fi
 
       - name: Update Lang Version in Module
