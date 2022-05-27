@@ -105,7 +105,7 @@ jobs:
 
           if [ "${{ matrix.module }}" == "module-ballerina-websubhub" ]; \
           then git checkout 2201.0.x || echo "Could not found branch 2201.0.x"; \
-          fi && \
+          fi; \
           done
 
 
