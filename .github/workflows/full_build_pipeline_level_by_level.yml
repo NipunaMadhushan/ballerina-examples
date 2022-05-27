@@ -93,18 +93,18 @@ jobs:
           length=${#version_split[@]} && \
 
           if [ $(($length)) -gt 1 ]; \
-          then git checkout -b full-build ${version_split[@]:(-1)} || echo "Could not found commit ${version_split[@]:(-1)}"; \
+          then cd $module_name && git checkout -b full-build ${version_split[@]:(-1)} && cd .. || echo "Could not found commit ${version_split[@]:(-1)}"; \
           elif [ "$VERSION" != "" ]; \
-          then git checkout v$VERSION || "Could not found branch v$VERSION"; \
+          then cd $module_name && git checkout v$VERSION && cd .. || "Could not found branch v$VERSION"; \
           else echo "$module_name is not packed with distribution."; \
           fi && \
 
           if [ "$module_name" == "module-ballerinai-transaction" ]; \
-          then git checkout 1.0.x || echo "Could not found branch 1.0.x"; \
+          then cd $module_name && git checkout 1.0.x && cd .. || echo "Could not found branch 1.0.x"; \
           fi && \
 
           if [ "$module_name" == "module-ballerina-websubhub" ]; \
-          then git checkout 2201.0.x || echo "Could not found branch 2201.0.x"; \
+          then cd $module_name && git checkout 2201.0.x && cd .. || echo "Could not found branch 2201.0.x"; \
           fi; \
           done
 
