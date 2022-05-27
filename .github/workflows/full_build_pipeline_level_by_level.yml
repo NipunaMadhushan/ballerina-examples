@@ -110,6 +110,19 @@ jobs:
           echo "---------------------------------------------------"; \
           done
 
+      - name: Update Lang Version in Module
+        run: |
+          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); do \
+          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ needs.build-lang.outputs.lang_version }}/" ${module_name}/gradle.properties; \
+          done
 
+      - name: Build Module
+        run: |
+          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); do \
+          ./gradlew clean build$ -x test --stacktrace --scan; \
+          done
+        env:
+          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+          packagePAT: ${{ secrets.GITHUB_TOKEN }}
 
 
