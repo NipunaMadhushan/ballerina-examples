@@ -103,10 +103,12 @@ jobs:
       - name: Get Module Version
         id: set-version
         run: |
+          MODULE_NAME=${{ matrix.module }}
+          MODULE_NAME=$(echo $MODULE_NAME | xargs)
           MODULE_DATA_FILE="extensions.json"
           PROPERTIES_FILE="gradle.properties"
 
-          VERSION_KEY=$(jq -r ".standard_library | .[] | select(.name==${{ matrix.module }}) | .version_key" $MODULE_DATA_FILE)
+          VERSION_KEY=$(jq -r ".standard_library | .[] | select(.name==\"$MODULE_NAME\") | .version_key" $MODULE_DATA_FILE)
           VERSION=$((grep -w $VERSION_KEY | cut -d= -f2) < $PROPERTIES_FILE)
           echo "::set-output name=version::$VERSION"
 
