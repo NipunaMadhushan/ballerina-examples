@@ -150,7 +150,7 @@ jobs:
 
   build-distribution:
     needs: build-lang
-    name: Build Distribution
+    name: Build Ballerina Distribution
     runs-on: ubuntu-latest
 
     steps:
