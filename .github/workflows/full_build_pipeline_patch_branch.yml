@@ -115,7 +115,7 @@ jobs:
       - name: Checkout to Branch
         working-directory: ./${{ matrix.module }}
         run: |
-          version_split=($(${{ steps.set-version.outputs.version }} | tr "-" "\n"))
+          version_split=($(\"${{ steps.set-version.outputs.version }}\" | tr "-" "\n"))
           length=${#version_split[@]}
 
           if [ $(($length)) -gt 1 ]; \
