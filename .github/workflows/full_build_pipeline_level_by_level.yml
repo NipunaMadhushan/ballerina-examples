@@ -40,16 +40,16 @@ jobs:
           VERSION=$((grep -w "version" | cut -d= -f2) < ballerina-lang/gradle.properties)
           echo "::set-output name=version::$VERSION"
 
-      - name: Build ballerina-lang
-        run: |
-          cd ballerina-lang
-          ./gradlew clean build -x check publishToMavenLocal --stacktrace --scan
-
-      - name: Archive Lang Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: Ballerina Lang Artifacts
-          path: ~/.m2/
+#      - name: Build ballerina-lang
+#        run: |
+#          cd ballerina-lang
+#          ./gradlew clean build -x check publishToMavenLocal --stacktrace --scan
+#
+#      - name: Archive Lang Artifacts
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: Ballerina Lang Artifacts
+#          path: ~/.m2/
 
     outputs:
       lang_version: ${{ steps.lang-version.outputs.version }}
@@ -67,11 +67,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Download Ballerina Lang Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: Ballerina Lang Artifacts
-          path: ~/.m2/
+#      - name: Download Ballerina Lang Artifacts
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: Ballerina Lang Artifacts
+#          path: ~/.m2/
 
       - name: Download Module Data
         run: |
