@@ -29,7 +29,6 @@ jobs:
       - name: Download Module Data
         run: |
           wget https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/extensions.json
-          wget https://raw.githubusercontent.com/ballerina-platform/ballerina-distribution/2201.0.x/gradle.properties
 
       - name: Create Strategy Matrix
         id: set-matrix
@@ -38,12 +37,8 @@ jobs:
           PROPERTIES_FILE="gradle.properties"
 
           modules="["
-          for module_name in $(jq -r '.standard_library | .[] | select(.level<8) | .name' $MODULE_DATA_FILE); \
-          do version_key=$(jq -r ".standard_library | .[] | select(.name==\"$module_name\") | .version_key" $MODULE_DATA_FILE) && \
-          version=$((grep -w $version_key | cut -d= -f2) < $PROPERTIES_FILE) && \
-          module_data="{\"name\": \"$module_name\", \"version\": \"$version\"}" && \
-          echo $module_data && \
-          modules="${modules}${module_data}, "; \
+          for moduleName in $(jq '.standard_library| .[] | .name' $MODULE_DATA_FILE); \
+          do modules="${modules}${moduleName}, "; \
           done
 
           modules="${modules/%??/}]"
@@ -97,27 +92,39 @@ jobs:
           name: Ballerina Lang Artifacts
           path: ~/.m2/
 
+      - name: Download Module Data
+        run: |
+          wget https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/extensions.json
+          wget https://raw.githubusercontent.com/ballerina-platform/ballerina-distribution/2201.0.x/gradle.properties
+
       - name: Clone Module
-        run: git clone https://github.com/ballerina-platform/${{ matrix.module.name }}.git
+        run: git clone https://github.com/ballerina-platform/${{ matrix.module }}.git
+
+      - name: Get Module Version
+        id: set-version
+        run: |
+          VERSION_KEY=$(jq -r ".standard_library | .[] | select(.name==${{ matrix.module }}) | .version_key" $MODULE_DATA_FILE)
+          VERSION=$((grep -w $VERSION_KEY | cut -d= -f2) < $PROPERTIES_FILE)
+          echo "::set-output name=version::$VERSION"
 
       - name: Checkout to Branch
-        working-directory: ./${{ matrix.module.name }}
+        working-directory: ./${{ matrix.module }}
         run: |
-          version_split=($(${{ matrix.module.version }} | tr "-" "\n"))
+          version_split=($(${{ steps.set-version.outputs.version }} | tr "-" "\n"))
           length=${#version_split[@]}
 
           if [ $(($length)) -gt 1 ]; \
           then git checkout -b full-build ${version_split[@]:(-1)} | echo "Could not found commit ${version_split[@]:(-1)}"; \
-          else git checkout v${{ matrix.module.version }} | "Could not found branch v${{ matrix.module.version }}"; \
+          else git checkout v${{ steps.set-version.outputs.version }} | "Could not found branch v${{ steps.set-version.outputs.version }}"; \
           fi
 
       - name: Update Lang Version in Module
-        working-directory: ./${{ matrix.module.name }}
+        working-directory: ./${{ matrix.module }}
         run: |
           perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ needs.build-lang.outputs.lang_version }}/" gradle.properties
 
       - name: Build Module
-        working-directory: ./${{ matrix.module.name }}
+        working-directory: ./${{ matrix.module }}
         run: |
           testsEnabled=" -x test"
           if [ "${{ github.event.inputs.enable_tests }}" == "true" ]; then testsEnabled="" && echo "Tests are Enabled"; else echo "Tests are Disabled"; fi
