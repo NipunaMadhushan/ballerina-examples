@@ -106,7 +106,8 @@ jobs:
 
           if [ "$module_name" == "module-ballerina-websubhub" ]; \
           then cd $module_name && git checkout 2201.0.x && cd .. || echo "Could not found branch 2201.0.x"; \
-          fi; \
+          fi && \
+          echo "---------------------------------------------------"; \
           done
 
 
