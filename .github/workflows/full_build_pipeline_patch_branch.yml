@@ -120,7 +120,7 @@ jobs:
 
           if [ $(($length)) -gt 1 ]; \
           then git checkout -b full-build ${version_split[@]:(-1)} || echo "Could not found commit ${version_split[@]:(-1)}"; \
-          elif [ "$version" != "" ]; \
+          elif [ "${{ steps.set-version.outputs.version }}" != "" ]; \
           then git checkout v${{ steps.set-version.outputs.version }} || "Could not found branch v${{ steps.set-version.outputs.version }}"; \
           else echo "${{ matrix.module }} is not packed with distribution."; \
           fi
