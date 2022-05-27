@@ -117,6 +117,7 @@ jobs:
         run: |
           version_split=($(${{ steps.set-version.outputs.version }} | tr "-" "\n"))
           length=${#version_split[@]}
+          echo $length
 
           if [ $(($length)) -gt 1 ]; \
           then git checkout -b full-build ${version_split[@]:(-1)} || echo "Could not found commit ${version_split[@]:(-1)}"; \
