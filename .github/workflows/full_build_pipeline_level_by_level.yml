@@ -126,4 +126,43 @@ jobs:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.GITHUB_TOKEN }}
 
+  build-distribution:
+    needs: build-lang
+    name: Build Ballerina Distribution
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Download Ballerina Lang Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Ballerina Lang Artifacts
+          path: ~/.m2/
+
+      - name: Clone Distribution
+        run: git clone https://github.com/ballerina-platform/ballerina-distribution.git
+
+      - name: Checkout to Patch Branch
+        working-directory: ./ballerina-distribution
+        run: git checkout 2201.0.x
+
+      - name: Update Lang Version in Module
+        working-directory: ./ballerina-distribution
+        run: |
+          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ needs.build-lang.outputs.lang_version }}/" gradle.properties
+
+      - name: Build Module
+        working-directory: ./ballerina-distribution
+        run: |
+          testsEnabled=" -x test"
+          if [ "${{ github.event.inputs.enable_tests }}" == "true" ]; \
+          then testsEnabled="" && echo "Tests are Enabled"; \
+          else echo "Tests are Disabled"; \
+          fi
+          ./gradlew clean build${testsEnabled} --stacktrace --scan --console=plain --no-daemon --continue
+        env:
+          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+          packagePAT: ${{ secrets.GITHUB_TOKEN }}
+          devCentralToken: ${{ secrets.BALLERINA_DEV_CENTRAL_ACCESS_TOKEN }}
