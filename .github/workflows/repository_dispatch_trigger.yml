@@ -26,7 +26,7 @@ jobs:
           java-version: '11'
 
       - name: Trigger workflow (Branch Enabled)
-        if: ${{ github.event.inputs.branch_enabled }} == 'true'
+        if: github.event.inputs.branch_enabled == 'true'
         run: |
           curl -X POST \
           'https://api.github.com/repos/NipunaMadhushan/ballerina-examples/dispatches' \
@@ -41,7 +41,7 @@ jobs:
           }"
 
       - name: Trigger workflow (Branch Disabled)
-        if: ${{ github.event.inputs.branch_enabled }} == 'false'
+        if: github.event.inputs.branch_enabled == 'false'
         run: |
           curl -X POST \
           'https://api.github.com/repos/NipunaMadhushan/ballerina-examples/dispatches' \
