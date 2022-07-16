@@ -1,0 +1,39 @@
+name: Repository Dispatch Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch_enabled:
+        description: 'Branch enabled'
+        type: choice
+        required: true
+        options:
+          - 'true'
+          - 'false'
+        default: 'true'
+
+jobs:
+  send-chat-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Trigger workflow
+        run: |
+          curl -X POST \
+          'https://api.github.com/repos/NipunaMadhushan/ballerina-examples/dispatches' \
+          -H 'Accept: application/vnd.github.v3+json' \
+          -H 'Authorization: Bearer ${{ secrets.BALLERINA_BOT_TOKEN }}' \
+          --data "{
+            \"event_type\": \"notify-build-failure\",
+            \"client_payload\": {
+              \"repoName\": \"ballerina-distribution\"
+            }
+          }"
