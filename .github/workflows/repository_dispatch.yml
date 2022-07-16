@@ -20,4 +20,4 @@ jobs:
       - name: Echo payload
         run: |
           echo "Repo Name: ${{ github.event.client_payload.repoName }}"
-          echo "Branch: ${{ github.event.client_payload.repoName }}"
+          echo "Branch: ${{ github.event.client_payload.branch }}"

@@ -25,7 +25,23 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
-      - name: Trigger workflow
+      - name: Trigger workflow (Branch Enabled)
+        if: ${{ github.event.inputs.branch_enabled }} == 'true'
+        run: |
+          curl -X POST \
+          'https://api.github.com/repos/NipunaMadhushan/ballerina-examples/dispatches' \
+          -H 'Accept: application/vnd.github.v3+json' \
+          -H 'Authorization: Bearer ${{ secrets.BALLERINA_BOT_TOKEN }}' \
+          --data "{
+            \"event_type\": \"notify-build-failure\",
+            \"client_payload\": {
+              \"repoName\": \"ballerina-distribution\"
+              \"branch\": \"2201.2.x\"
+            }
+          }"
+
+      - name: Trigger workflow (Branch Disabled)
+        if: ${{ github.event.inputs.branch_enabled }} != 'true'
         run: |
           curl -X POST \
           'https://api.github.com/repos/NipunaMadhushan/ballerina-examples/dispatches' \

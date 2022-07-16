@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a8dd28e3-807d-4cff-a989-47e7954e1c2e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/repository_dispatch.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.github/workflows/repository_dispatch_trigger.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/repository_dispatch.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/repository_dispatch.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/repository_dispatch_trigger.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/repository_dispatch_trigger.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +39,7 @@
       <workItem from="1653883276206" duration="2345000" />
       <workItem from="1654055831535" duration="607000" />
       <workItem from="1656905880614" duration="13000" />
-      <workItem from="1657994408527" duration="1246000" />
+      <workItem from="1657994408527" duration="1561000" />
     </task>
     <servers />
   </component>
