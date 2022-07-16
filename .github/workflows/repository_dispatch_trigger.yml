@@ -13,7 +13,7 @@ on:
         default: 'true'
 
 jobs:
-  send-chat-message:
+  trigger-repo-dispatch:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -33,7 +33,7 @@ jobs:
           -H 'Accept: application/vnd.github.v3+json' \
           -H 'Authorization: Bearer ${{ secrets.BALLERINA_BOT_TOKEN }}' \
           --data "{
-            \"event_type\": \"notify-build-failure\",
+            \"event_type\": \"trigger-repo-dispatch\",
             \"client_payload\": {
               \"repoName\": \"ballerina-distribution\"
               \"branch\": \"2201.2.x\"
@@ -48,7 +48,7 @@ jobs:
           -H 'Accept: application/vnd.github.v3+json' \
           -H 'Authorization: Bearer ${{ secrets.BALLERINA_BOT_TOKEN }}' \
           --data "{
-            \"event_type\": \"notify-build-failure\",
+            \"event_type\": \"trigger-repo-dispatch\",
             \"client_payload\": {
               \"repoName\": \"ballerina-distribution\"
             }
