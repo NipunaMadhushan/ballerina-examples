@@ -35,7 +35,7 @@ jobs:
           --data "{
             \"event_type\": \"trigger-repo-dispatch\",
             \"client_payload\": {
-              \"repoName\": \"ballerina-distribution\"
+              \"repoName\": \"ballerina-distribution\",
               \"branch\": \"2201.2.x\"
             }
           }"
