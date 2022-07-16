@@ -1,7 +1,13 @@
 import sys
 
 repo_name = sys.argv[1]
-branch_name = sys.argv[2]
+
+branch = ''
+if len(sys.argv) > 2:
+    branch = sys.argv[2]
 
 print(repo_name)
-print(branch_name)
+if branch == '':
+    print('Branch not specified')
+else:
+    print(branch_name)
