@@ -21,3 +21,8 @@ jobs:
         run: |
           echo "Repo Name: ${{ github.event.client_payload.repoName }}"
           echo "Branch: ${{ github.event.client_payload.branch }}"
+
+      - name: Branch Name
+        if: ${{ github.event.client_payload.branch }}
+        run: |
+          echo "Branch: ${{ github.event.client_payload.branch }}"
