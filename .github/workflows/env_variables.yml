@@ -46,5 +46,17 @@ jobs:
           
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}"
           echo ${{ github.repository_owner }}
+      
+      - name: Get Repo Name
+        id: repo_name
+        run: |
+          MODULE=${{ github.event.repository.name }}
+          echo ${MODULE##*-}
+          echo "::set-output name=short_name::${MODULE##*-}"
+          
+      - name: Echo Repo Name
+        run: |
+          echo "${{ steps.repo_name.outputs.short_name }}"
+        
 
 
