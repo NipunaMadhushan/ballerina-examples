@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
+      
       - name: Get Github Variables
         run: |
           echo "GITHUB_ACTION: $GITHUB_ACTION"
@@ -33,6 +33,7 @@ jobs:
           echo "GITHUB_REF_PROTECTED: $GITHUB_REF_PROTECTED"
           echo "GITHUB_REF_TYPE: $GITHUB_REF_TYPE"
           echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_REPOSITORY_NAME: $GITHUB_REPOSITORY_NAME"
           echo "GITHUB_REPOSITORY_OWNER: $GITHUB_REPOSITORY_OWNER"
           echo "GITHUB_RETENTION_DAYS: $GITHUB_RETENTION_DAYS"
           echo "GITHUB_RUN_ATTEMPT: $GITHUB_RUN_ATTEMPT"
