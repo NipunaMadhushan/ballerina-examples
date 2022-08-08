@@ -1,0 +1,58 @@
+name: Hasitha Ballerina Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ubuntu:
+    name: Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hasithaa/setup-ballerina@v1
+        name: Install Ballerina
+        with:
+          version: 2201.1.1
+      - run: bal version
+      - run: bal run hello_world.bal
+        working-directory: examples/hello-world
+
+  centos:
+    name: CentOS
+    container: centos:latest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hasithaa/setup-ballerina@v1
+        name: Install Ballerina
+        with:
+          version: 2201.1.1
+      - run: bal version
+      - run: bal run hello_world.bal
+        working-directory: examples/hello-world
+
+  macos:
+    name: MacOS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hasithaa/setup-ballerina@v1
+        name: Install Ballerina
+        with:
+          version: 2201.1.1
+      - run: bal version
+      - run: bal run hello_world.bal
+        working-directory: examples/hello-world
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hasithaa/setup-ballerina@v1
+        name: Install Ballerina
+        with:
+          version: 2201.1.1
+      - run: bal version
+      - run: bal run hello_world.bal
+        working-directory: examples\hello-world
