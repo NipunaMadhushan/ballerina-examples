@@ -1,0 +1,83 @@
+name: Ballerina Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ubuntu:
+    name: Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Ballerina Version
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            version
+      - name: Ballerina Version
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            run hello_world.bal
+        env:
+          WORKING_DIR: examples/hello-world
+
+  centos:
+    name: CentOS
+    container: centos:latest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Ballerina Version
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            version
+      - name: Ballerina Version
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            run hello_world.bal
+        env:
+          WORKING_DIR: examples/hello-world
+
+  macos:
+    name: MacOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Ballerina Version
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            version
+      - name: Ballerina Version
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            run hello_world.bal
+        env:
+          WORKING_DIR: examples/hello-world
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Ballerina Version
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            version
+      - name: Ballerina Version
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            run hello_world.bal
+        env:
+          WORKING_DIR: examples\hello-world
+
