@@ -2,7 +2,7 @@ name: Docker Build
 on:
   workflow_dispatch:
     inputs:
-      version:
+      release_version:
         description: 'Ballerina release version'
         required: true
         default: '2201.2.1-rc1'
@@ -27,7 +27,6 @@ jobs:
         id: set-version
         run: |
           RELEASE_VERSION=${{ github.event.inputs.release_version }}
-          echo "$RELEASE_VERSION"
           VERSION=$(cut -d- -f1 <<< $RELEASE_VERSION)
           CODE_NAME="swan-lake"
           TAGGED_VERSION=$RELEASE_VERSION
@@ -46,10 +45,8 @@ jobs:
       - name: Download ballerina zip
         run: |
           baseUrl="https://github.com/ballerina-platform/ballerina-distribution/releases/download/v$GIT_TAG"
-          echo $VERSION
           mkdir $VERSION
           cd $VERSION
-
           wget "$baseUrl/ballerina-$LONG_VERSION.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.BALLERINA_BOT_TOKEN }}
