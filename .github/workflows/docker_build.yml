@@ -71,7 +71,9 @@ jobs:
 
       - name: Build and push docker image
         run: |
-          export DOCKER_CLI_EXPERIMENTAL=enabled
+          echo '{ "experimental": "enabled" }' > ~/.docker/config.json
+          sudo systemctl restart docker
+          docker version
           DOCKER_REPO=${{ steps.process-docker.outputs.dockerRepo }}
 
           cp $VERSION/ballerina-$VERSION.zip $DOCKER_REPO/base/docker/
