@@ -54,43 +54,26 @@ jobs:
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
           devCentralToken: ${{ secrets.BALLERINA_DEV_CENTRAL_ACCESS_TOKEN }}
 
-      - name: Process docker
-        id: process-docker
-        run: |
-          DOCKER_REPO='module-ballerina-docker'
-          echo "::set-output name=dockerRepo::$DOCKER_REPO"
-
-      - name: Enable experimental functions
-        run: |
-          echo '{ "experimental": "enabled" }' > ~/.docker/config.json
-          sudo systemctl restart docker
-          docker version
-
-      - name: Checkout docker repo
-        uses: actions/checkout@v2
-        with:
-          repository: ballerina-platform/module-ballerina-docker
-          path: module-ballerina-docker
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-
 #      - name: Login to DockerHub
 #        uses: docker/login-action@v1
 #        with:
 #          username: ${{ secrets.DOCKER_HUB_USER }}
 #          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
+      - name: Process docker
+        id: process-docker
+        run: |
+          git clone --single-branch --branch master https://github.com/ballerina-platform/module-ballerina-docker
+
+          DOCKER_REPO='module-ballerina-docker'
+          echo "::set-output name=dockerRepo::$DOCKER_REPO"
 
 
       - name: Build and push docker image
         run: |
           export DOCKER_CLI_EXPERIMENTAL=enabled
           DOCKER_REPO=${{ steps.process-docker.outputs.dockerRepo }}
+
           cp $VERSION/ballerina-$VERSION.zip $DOCKER_REPO/base/docker/
           docker build --no-cache=true --squash --build-arg BALLERINA_DIST=ballerina-$VERSION.zip -t ballerina/ballerina:$GIT_TAG  $DOCKER_REPO/base/docker/
 
