@@ -45,7 +45,7 @@ jobs:
       - name: Download ballerina zip
         run: |
           baseUrl="https://github.com/ballerina-platform/ballerina-distribution/releases/download/v$GIT_TAG"
-          rm -rf $VERSION
+          echo $VERSION
           mkdir $VERSION
           cd $VERSION
 
