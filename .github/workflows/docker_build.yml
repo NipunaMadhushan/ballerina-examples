@@ -71,7 +71,7 @@ jobs:
 
       - name: Build and push docker image
         run: |
-          echo '{ "experimental": "enabled" }' > ~/.docker/config.json
+          echo $'{\n    "experimental": true\n}' | sudo tee /etc/docker/daemon.json
           sudo service docker restart
           docker version
           DOCKER_REPO=${{ steps.process-docker.outputs.dockerRepo }}
