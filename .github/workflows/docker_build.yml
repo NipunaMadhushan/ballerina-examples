@@ -47,7 +47,7 @@ jobs:
           baseUrl="https://github.com/ballerina-platform/ballerina-distribution/releases/download/v$GIT_TAG"
           mkdir $VERSION
           cd $VERSION
-          wget "$baseUrl/ballerina-$LONG_VERSION.zip"
+          wget "$baseUrl/ballerina-$VERSION.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.BALLERINA_BOT_TOKEN }}
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
