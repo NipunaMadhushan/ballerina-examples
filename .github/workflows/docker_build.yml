@@ -64,16 +64,17 @@ jobs:
         id: process-docker
         run: |
           git clone --single-branch --branch master https://github.com/ballerina-platform/module-ballerina-docker
-
           DOCKER_REPO='module-ballerina-docker'
           echo "::set-output name=dockerRepo::$DOCKER_REPO"
 
-
-      - name: Build and push docker image
+      - name: Enable experimental functions
         run: |
           echo $'{\n    "experimental": true\n}' | sudo tee /etc/docker/daemon.json
           sudo service docker restart
           docker version
+
+      - name: Build and push docker image
+        run: |
           DOCKER_REPO=${{ steps.process-docker.outputs.dockerRepo }}
 
           cp $VERSION/ballerina-$VERSION.zip $DOCKER_REPO/base/docker/

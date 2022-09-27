@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a8dd28e3-807d-4cff-a989-47e7954e1c2e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/go_action.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,7 +49,9 @@
       <workItem from="1658157510683" duration="6044000" />
       <workItem from="1658201692109" duration="2924000" />
       <workItem from="1658258633202" duration="316000" />
-      <workItem from="1659935342377" duration="2172000" />
+      <workItem from="1659935342377" duration="2863000" />
+      <workItem from="1663906616473" duration="1934000" />
+      <workItem from="1664213616604" duration="3557000" />
     </task>
     <servers />
   </component>
