@@ -16,8 +16,8 @@ jobs:
         run:
           FILE="failed-modules.txt"
 
-          while read line
-            do echo $line
+          while read line; do
+            echo $line;
           done < ${FILE}
         shell: bash
 
