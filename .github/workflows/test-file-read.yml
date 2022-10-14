@@ -1,0 +1,23 @@
+name: Test File Read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  read_file:
+    name: Read File
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Read File
+        run:
+          FILE='resources/failed-modules.txt'
+          while IFS= read -r line
+          do
+            echo "$line"
+          done < $FILE
+
+
