@@ -15,9 +15,6 @@ jobs:
       - name: Read File
         run:
           FILE='resources/failed-modules.txt'
-          while IFS= read -r line
-          do
-            echo "$line"
-          done < $FILE
+          while IFS= read -r; do echo "$line"; done < $FILE
 
 
