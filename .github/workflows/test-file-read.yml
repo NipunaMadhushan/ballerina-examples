@@ -20,4 +20,14 @@ jobs:
             echo $line;
           done < ${FILE}
         shell: bash
+        
+      - name: For Loop
+        run:
+          for i in 1 2 3 4 5; \
+          do 
+            echo "Hello"
+            echo "World"
+            echo "My Name is"
+            echo "Nipuna Madhushan"
+          done
 
