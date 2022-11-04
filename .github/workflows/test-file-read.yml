@@ -30,4 +30,5 @@ jobs:
             echo "My Name is"
             echo "Nipuna Madhushan";
           done
+        shell: bash
 
