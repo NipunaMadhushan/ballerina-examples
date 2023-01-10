@@ -60,7 +60,7 @@ jobs:
           
       - name: Echo Event Name
         run: |
-          echo "${{ github.event.name }}"
+          echo "${GITHUB_EVENT_NAME}"
         
 
 
