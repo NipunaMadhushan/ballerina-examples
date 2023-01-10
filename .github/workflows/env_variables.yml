@@ -57,6 +57,10 @@ jobs:
       - name: Echo Repo Name
         run: |
           echo "${{ steps.repo_name.outputs.short_name }}"
+          
+      - name: Echo Event Name
+        run: |
+          echo "${{ github.event.name }}"
         
 
 
