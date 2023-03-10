@@ -38,19 +38,19 @@ jobs:
         run: |
           VERSION=$((grep -w "version" | cut -d= -f2) < ballerina-lang/gradle.properties)
           echo "::set-output name=version::$VERSION"
-      - name: Build ballerina-lang
-        run: |
-          cd ballerina-lang
-          ./gradlew clean build -x check -x test publishToMavenLocal --stacktrace --scan
+#       - name: Build ballerina-lang
+#         run: |
+#           cd ballerina-lang
+#           ./gradlew clean build -x check -x test publishToMavenLocal --stacktrace --scan
       - name: Remove ballerina-lang
         run: |
           rm -rf ./ballerina-lang
       - name: Clone Dev Tools Repo
         run: |
           git clone https://github.com/ballerina-platform/ballerina-dev-tools.git
-      - name: Change Lang Version
-        run: |
-          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ballerina-dev-tools/gradle.properties
+#       - name: Change Lang Version
+#         run: |
+#           perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ballerina-dev-tools/gradle.properties
       - name: Echo Lang Version
         run: |
           LANG_VERSION=$((grep -w 'ballerinaLangVersion') < ballerina-dev-tools/gradle.properties)
