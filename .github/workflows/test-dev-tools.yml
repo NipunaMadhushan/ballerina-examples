@@ -42,6 +42,9 @@ jobs:
         run: |
           cd ballerina-lang
           ./gradlew clean build -x check -x test publishToMavenLocal --stacktrace --scan
+      - name: Remove ballerina-lang
+        run: |
+          rm -rf ./ballerina-lang
       - name: Clone Dev Tools Repo
         run: |
           git clone https://github.com/ballerina-platform/ballerina-dev-tools.git
