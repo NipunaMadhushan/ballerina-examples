@@ -1,0 +1,56 @@
+name: CI Full Build Ubuntu
+
+on:
+  workflow_dispatch:
+    inputs:
+      ballerina_lang_branch:
+        description: 'Ballerina-lang branch'
+        required: true
+        default: '2201.4.x'
+
+jobs:
+  build-lang:
+    name: Build Dev Tools Repo
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Setup NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 10.22.1
+      - name: Checkout To Lang Branch
+        run: |
+          git checkout ${{ github.event.inputs.ballerina_lang_branch }}
+      - name: Get Lang Version
+        id: lang-version
+        run: |
+          VERSION=$((grep -w "version" | cut -d= -f2) < gradle.properties)
+          echo "::set-output name=version::$VERSION"
+      - name: Build ballerina-lang
+        run: |
+          cd ballerina-lang
+          ./gradlew clean build -x check -x test publishToMavenLocal --stacktrace --scan
+      - name: Clone Dev Tools Repo
+        run: |
+          git clone https://github.com/ballerina-platform/ballerina-dev-tools.git
+      - name: Change Lang Version
+        run: |
+          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ballerina-dev-tools/gradle.properties
+      - name: Echo Lang Version
+        run: |
+          LANG_VERSION=$((grep -w 'ballerinaLangVersion') < ballerina-dev-tools/gradle.properties)
+      - name: Build Dev Tools Repo
+        run : |
+          ./gradlew clean build --stacktrace --scan
+        
+          
+         
+        
