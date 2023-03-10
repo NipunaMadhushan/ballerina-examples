@@ -1,4 +1,4 @@
-name: CI Full Build Ubuntu
+name: Build Dev Tools
 
 on:
   workflow_dispatch:
