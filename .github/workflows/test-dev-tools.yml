@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 10.22.1
-      - name: Clone Dev Tools Repo
+      - name: Clone Ballerina Lang
         run: |
           git clone https://github.com/ballerina-platform/ballerina-lang.git
       - name: Checkout To Lang Branch
