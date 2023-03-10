@@ -26,8 +26,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 10.22.1
+      - name: Clone Dev Tools Repo
+        run: |
+          git clone https://github.com/ballerina-platform/ballerina-lang.git
       - name: Checkout To Lang Branch
         run: |
+          cd ballerina-lang
           git checkout ${{ github.event.inputs.ballerina_lang_branch }}
       - name: Get Lang Version
         id: lang-version
@@ -49,6 +53,7 @@ jobs:
           LANG_VERSION=$((grep -w 'ballerinaLangVersion') < ballerina-dev-tools/gradle.properties)
       - name: Build Dev Tools Repo
         run : |
+          cd ballerina-dev-tools
           ./gradlew clean build --stacktrace --scan
         
           
