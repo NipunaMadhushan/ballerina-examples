@@ -51,6 +51,8 @@ jobs:
       - name: Echo Lang Version
         run: |
           LANG_VERSION=$((grep -w 'ballerinaLangVersion') < ballerina-dev-tools/gradle.properties)
+          echo ${{ steps.lang-version.outputs.version }}
+          echo $LANG_VERSION
       - name: Build Dev Tools Repo
         run : |
           cd ballerina-dev-tools
