@@ -55,6 +55,9 @@ jobs:
         run : |
           cd ballerina-dev-tools
           ./gradlew clean build --stacktrace --scan
+        env:
+          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+          packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
         
           
          
