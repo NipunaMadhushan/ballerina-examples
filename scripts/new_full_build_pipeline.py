@@ -544,7 +544,7 @@ def write_failed_modules(failed_module_names):
     with open(FAILED_MODULES_TEXT_FILE, "w") as file:
         for module_name in failed_module_names:
             file.write(module_name + "\n")
-            print(f"Build failed for {module_name}")
+            print_error(f"Build failed for {module_name}")
         file.close()
 
 
