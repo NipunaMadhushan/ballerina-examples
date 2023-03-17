@@ -534,22 +534,22 @@ def read_ignore_modules(patch_level):
 
 
 def print_info(message):
-    print(f'{Fore.GREEN}[INFO] {message}{Style.RESET_ALL}')
+    print(f'{Fore.GREEN}[INFO] {message}{Style.RESET_ALL}', flush=False)
 
 
 def print_error(message):
-    print(f'{Fore.RED}[ERROR] {message}{Style.RESET_ALL}')
+    print(f'{Fore.RED}[ERROR] {message}{Style.RESET_ALL}', flush=False)
     sys.exit(1)
 
 
 def print_warn(message):
-    print(f'{Fore.YELLOW}[WARN] {message}{Style.RESET_ALL}')
+    print(f'{Fore.YELLOW}[WARN] {message}{Style.RESET_ALL}', flush=False)
 
 
 def print_block():
-    print()
-    print("##############################################")
-    print()
+    print(flush=False)
+    print("##############################################", flush=False)
+    print(flush=False)
 
 
 main()
