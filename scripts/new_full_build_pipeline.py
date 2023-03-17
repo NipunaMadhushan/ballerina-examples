@@ -397,9 +397,9 @@ def read_released_stdlib_versions(url):
     global released_stdlib_versions
 
     try:
-        response = requests.get(url=url)
+        response = request.get(url=url)
         if response.status_code == 200:
-            response = requests.get(URL)
+            response = request.get(URL)
             open(RELEASED_VERSION_PROPERTIES, "wb").write(response.content)
 
             config = ConfigObj(RELEASED_VERSION_PROPERTIES)
@@ -435,7 +435,7 @@ def read_stdlib_data(test_module):
     global stdlib_modules_by_level
 
     try:
-        response = requests.get(url=MODULE_LIST_JSON)
+        response = request.get(url=MODULE_LIST_JSON)
         if response.status_code == 200:
             stdlib_modules_data = json.loads(response.text)
             if test_module:
