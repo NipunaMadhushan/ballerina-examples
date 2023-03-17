@@ -1,0 +1,45 @@
+name: Daily Full Build Pipeline (master)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 18 * * *'   # 00:00 in LK time (GMT+5:30)
+
+jobs:
+  build-pipeline:
+    name: Build Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Setup NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 10.22.1
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Python Packages
+        run: |
+          pip install requests
+          pip install httplib2
+          pip install colorama
+          pip install configobj
+
+      - name: Build Modules
+        run: |
+          python scripts/new_full_build_pipeline.py ./fbp --skip-tests
+        env:
+          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+          packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
+          devCentralToken: ${{ secrets.BALLERINA_DEV_CENTRAL_ACCESS_TOKEN }}
