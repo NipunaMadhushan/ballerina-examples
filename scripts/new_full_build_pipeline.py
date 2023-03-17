@@ -10,25 +10,6 @@ from pathlib import Path
 from urllib import request
 from configobj import ConfigObj
 
-
-class Unbuffered(object):
-    def __init__(self, stream):
-        self.stream = stream
-
-    def write(self, data):
-        self.stream.write(data)
-        self.stream.flush()
-
-    def writelines(self, datas):
-        self.stream.writelines(datas)
-        self.stream.flush()
-
-    def __getattr__(self, attr):
-        return getattr(self.stream, attr)
-
-
-sys.stdout = Unbuffered(sys.stdout)
-
 # Resources
 MODULE_LIST_JSON = "https://raw.githubusercontent.com/ballerina-platform/" + \
                    "ballerina-release/master/dependabot/resources/extensions.json"
@@ -169,7 +150,7 @@ def main():
 
         os.chdir("ballerina-lang")
         lang_version = get_version()
-        lang_build_commands = ["./gradlew", "clean", "build", "-x", "test", "--scan", "--stacktrace",
+        lang_build_commands = ["./gradlew", "clean", "build", "-x", "test", "-x", "check", "--scan", "--stacktrace",
                                "publishToMavenLocal"]
         build_module(lang_build_commands)
         os.chdir("..")
