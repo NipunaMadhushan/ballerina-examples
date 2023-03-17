@@ -57,6 +57,11 @@ jobs:
       - name: Echo Repo Name
         run: |
           echo "${{ steps.repo_name.outputs.short_name }}"
+          
+      - name: Echo Event Name
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "${GITHUB_EVENT_NAME}"
         
 
 

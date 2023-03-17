@@ -1,0 +1,23 @@
+name: Install NodeJs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    name: Install NodeJS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        
+      - name: Setup NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 10.22.1
+      
+      - name: Check version
+        run: |
+          node -v
+          npm -v
