@@ -150,7 +150,7 @@ def main():
 
         os.chdir("ballerina-lang")
         lang_version = get_version()
-        lang_build_commands = ["./gradlew", "clean", "build", "-x test", "--scan", "--stacktrace",
+        lang_build_commands = ["./gradlew", "clean", "build", "-x", "test", "--scan", "--stacktrace",
                                "publishToMavenLocal"]
         build_module(lang_build_commands)
         os.chdir("..")
