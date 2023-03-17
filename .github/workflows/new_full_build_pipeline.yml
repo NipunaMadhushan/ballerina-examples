@@ -1,4 +1,4 @@
-name: Daily Full Build Pipeline (master)
+name: Daily Full Build Pipeline (New)
 
 on:
   workflow_dispatch:
