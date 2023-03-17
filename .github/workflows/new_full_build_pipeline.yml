@@ -35,6 +35,7 @@ jobs:
           pip install httplib2
           pip install colorama
           pip install configobj
+          pip install requests
 
       - name: Build Modules
         run: |

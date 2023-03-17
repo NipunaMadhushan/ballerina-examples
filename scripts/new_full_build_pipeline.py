@@ -3,11 +3,11 @@ import json
 import os
 import subprocess
 import sys
+import requests
 
 from colorama import Fore
 from colorama import Style
 from pathlib import Path
-from urllib import request
 from configobj import ConfigObj
 
 # Resources
@@ -23,6 +23,7 @@ BALLERINA_DIST_REPO_NAME = "ballerina-distribution"
 # File names
 GRADLE_PROPERTIES = "gradle.properties"
 RELEASED_VERSION_PROPERTIES = "released_version.properties"
+FAILED_MODULES_TEXT_FILE = "failed_modules.txt"
 
 # Argument parser
 parser = argparse.ArgumentParser(description="Full Build Pipeline")
@@ -150,6 +151,7 @@ def main():
 
         os.chdir("ballerina-lang")
         lang_version = get_version()
+        print_info(f"Lang version: {lang_version}")
         lang_build_commands = ["./gradlew", "clean", "build", "-x", "test", "-x", "check", "--scan", "--stacktrace",
                                "publishToMavenLocal"]
         build_module(lang_build_commands)
@@ -232,9 +234,10 @@ def main():
             exit(1)
 
     read_stdlib_data(test_module)
-    read_ignore_modules()
+    read_ignore_modules(patch_level)
 
     start_build = False if from_module else True
+    failed_modules = []
     exit_code = 0
     for level in stdlib_modules_by_level:
         for module in stdlib_modules_by_level[level]:
@@ -262,6 +265,7 @@ def main():
 
                 if return_code != 0:
                     exit_code = return_code
+                    failed_modules.append(module_name)
                     if not continue_on_error:
                         exit(exit_code)
                 os.chdir("..")
@@ -273,6 +277,7 @@ def main():
                 start_build = False
 
         if exit_code != 0:
+            write_failed_modules(failed_modules)
             exit(exit_code)
 
     if build_distribution:
@@ -287,6 +292,8 @@ def main():
         return_code = build_module(dist_build_commands)
         if return_code != 0:
             exit_code = return_code
+            failed_modules.append(BALLERINA_DIST_REPO_NAME)
+            write_failed_modules(failed_modules)
             exit(exit_code)
         os.chdir("..")
 
@@ -397,7 +404,7 @@ def read_released_stdlib_versions(url):
     global released_stdlib_versions
 
     try:
-        response = request.urlopen(url)
+        response = requests.get(url)
         if response.status_code == 200:
             open(RELEASED_VERSION_PROPERTIES, "wb").write(response.content)
 
@@ -434,7 +441,7 @@ def read_stdlib_data(test_module):
     global stdlib_modules_by_level
 
     try:
-        response = request.urlopen(MODULE_LIST_JSON)
+        response = requests.get(MODULE_LIST_JSON)
         if response.status_code == 200:
             stdlib_modules_data = json.loads(response.text)
             if test_module:
@@ -514,7 +521,7 @@ def read_ignore_modules(patch_level):
     global downstream_repo_branches
 
     try:
-        response = request.urlopen(TEST_IGNORE_MODULES_JSON)
+        response = requests.get(TEST_IGNORE_MODULES_JSON)
         if response.status_code == 200:
             data = json.loads(response.text)
             if patch_level:
@@ -533,6 +540,14 @@ def read_ignore_modules(patch_level):
         exit(1)
 
 
+def write_failed_modules(failed_module_names):
+    with open(FAILED_MODULES_TEXT_FILE, "w") as file:
+        for module_name in failed_module_names:
+            file.write(module_name + "\n")
+            print(f"Build failed for {module_name}")
+        file.close()
+
+
 def print_info(message):
     print(f'{Fore.GREEN}[INFO] {message}{Style.RESET_ALL}')
 
@@ -548,7 +563,7 @@ def print_warn(message):
 
 def print_block():
     print()
-    print("##############################################")
+    print("##############################################################################")
     print()
 
 
