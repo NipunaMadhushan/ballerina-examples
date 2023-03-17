@@ -14,7 +14,7 @@ from configobj import ConfigObj
 MODULE_LIST_JSON = "https://raw.githubusercontent.com/ballerina-platform/" + \
                    "ballerina-release/master/dependabot/resources/extensions.json"
 TEST_IGNORE_MODULES_JSON = "https://raw.githubusercontent.com/ballerina-platform/" + \
-                           "dependabot/resources/full_build_ignore_modules.json"
+                           "ballerina-release/master/dependabot/resources/full_build_ignore_modules.json"
 
 # Repository names
 BALLERINA_LANG_REPO_NAME = "ballerina-lang"
