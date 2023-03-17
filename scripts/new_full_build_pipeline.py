@@ -16,10 +16,6 @@ MODULE_LIST_JSON = "https://raw.githubusercontent.com/ballerina-platform/" + \
 TEST_IGNORE_MODULES_JSON = "https://raw.githubusercontent.com/ballerina-platform/" + \
                            "dependabot/resources/full_build_ignore_modules.json"
 
-# Credentials
-BALLERINA_BOT_USERNAME = os.environ["BALLERINA_BOT_USERNAME"]
-BALLERINA_BOT_TOKEN = os.environ["BALLERINA_BOT_TOKEN"]
-
 # Repository names
 BALLERINA_LANG_REPO_NAME = "ballerina-lang"
 BALLERINA_DIST_REPO_NAME = "ballerina-distribution"
