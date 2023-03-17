@@ -10,6 +10,25 @@ from pathlib import Path
 from urllib import request
 from configobj import ConfigObj
 
+
+class Unbuffered(object):
+    def __init__(self, stream):
+        self.stream = stream
+
+    def write(self, data):
+        self.stream.write(data)
+        self.stream.flush()
+
+    def writelines(self, datas):
+        self.stream.writelines(datas)
+        self.stream.flush()
+
+    def __getattr__(self, attr):
+        return getattr(self.stream, attr)
+
+
+sys.stdout = Unbuffered(sys.stdout)
+
 # Resources
 MODULE_LIST_JSON = "https://raw.githubusercontent.com/ballerina-platform/" + \
                    "ballerina-release/master/dependabot/resources/extensions.json"
@@ -97,7 +116,7 @@ def main():
     lang_version = None
     downstream_branch = None
     patch_level = None
-    
+
     skip_tests = False
     update_stdlib_dependencies = False
     use_released_versions = False
@@ -251,7 +270,7 @@ def main():
                 os.chdir(module_name)
                 process_module(module, lang_version, use_released_versions, update_stdlib_dependencies,
                                keep_local_changes, downstream_branch)
-                
+
                 if not skip_tests and test_module and test_module != module_name:
                     build_commands = commands.copy()
                     build_command.append("-x")
@@ -259,7 +278,7 @@ def main():
                     return_code = build_module(build_commands)
                 else:
                     return_code = build_module(commands)
-                
+
                 if return_code != 0:
                     exit_code = return_code
                     if not continue_on_error:
@@ -475,7 +494,7 @@ def read_data_for_module_testing(stdlib_modules_data, test_module_name):
     if not test_module_name in standard_library_data.keys():
         print_error(f"Desired module {test_module_name} for testing was not found in {MODULE_LIST_JSON}")
         exit(1)
-        
+
     module_list = {test_module_name}
     while module_list:
         current_module_name = module_list.pop()
@@ -534,22 +553,22 @@ def read_ignore_modules(patch_level):
 
 
 def print_info(message):
-    print(f'{Fore.GREEN}[INFO] {message}{Style.RESET_ALL}', flush=False)
+    print(f'{Fore.GREEN}[INFO] {message}{Style.RESET_ALL}')
 
 
 def print_error(message):
-    print(f'{Fore.RED}[ERROR] {message}{Style.RESET_ALL}', flush=False)
+    print(f'{Fore.RED}[ERROR] {message}{Style.RESET_ALL}')
     sys.exit(1)
 
 
 def print_warn(message):
-    print(f'{Fore.YELLOW}[WARN] {message}{Style.RESET_ALL}', flush=False)
+    print(f'{Fore.YELLOW}[WARN] {message}{Style.RESET_ALL}')
 
 
 def print_block():
-    print(flush=False)
-    print("##############################################", flush=False)
-    print(flush=False)
+    print()
+    print("##############################################")
+    print()
 
 
 main()
