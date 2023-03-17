@@ -397,9 +397,8 @@ def read_released_stdlib_versions(url):
     global released_stdlib_versions
 
     try:
-        response = request.get(url=url)
+        response = request.urlopen(url)
         if response.status_code == 200:
-            response = request.get(URL)
             open(RELEASED_VERSION_PROPERTIES, "wb").write(response.content)
 
             config = ConfigObj(RELEASED_VERSION_PROPERTIES)
@@ -435,7 +434,7 @@ def read_stdlib_data(test_module):
     global stdlib_modules_by_level
 
     try:
-        response = request.get(url=MODULE_LIST_JSON)
+        response = request.urlopen(MODULE_LIST_JSON)
         if response.status_code == 200:
             stdlib_modules_data = json.loads(response.text)
             if test_module:
@@ -509,20 +508,28 @@ def read_data_for_module_testing(stdlib_modules_data, test_module_name):
     print_info("Testing Module: " + test_module_name)
 
 
-def read_ignore_modules():
+def read_ignore_modules(patch_level):
     global test_ignore_modules
     global build_ignore_modules
     global downstream_repo_branches
 
     try:
-        file = open(TEST_IGNORE_MODULES_JSON)
-        data = json.load(file)
-        test_ignore_modules = data['master']['test-ignore-modules']
-        build_ignore_modules = data['master']['build-ignore-modules']
-        downstream_repo_branches = data['master']['downstream-repo-branches']
-
+        response = request.urlopen(TEST_IGNORE_MODULES_JSON)
+        if response.status_code == 200:
+            data = json.loads(response.text)
+            if patch_level:
+                test_ignore_modules = data[patch_level]['test-ignore-modules']
+                build_ignore_modules = data[patch_level]['build-ignore-modules']
+                downstream_repo_branches = data[patch_level]['downstream-repo-branches']
+            else:
+                test_ignore_modules = data['master']['test-ignore-modules']
+                build_ignore_modules = data['master']['build-ignore-modules']
+                downstream_repo_branches = data['master']['downstream-repo-branches']
+        else:
+            print_error(f"Failed to load test ignore modules from {TEST_IGNORE_MODULES_JSON}")
+            exit(1)
     except json.decoder.JSONDecodeError:
-        print_error("Failed to load test ignore modules")
+        print_error(f"Failed to load test ignore modules from {TEST_IGNORE_MODULES_JSON}")
         exit(1)
 
 
