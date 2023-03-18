@@ -154,7 +154,7 @@ def main():
         print_info(f"Lang version: {lang_version}")
         lang_build_commands = ["./gradlew", "clean", "build", "-x", "test", "-x", "check", "--scan", "--stacktrace",
                                "publishToMavenLocal"]
-        build_module(lang_build_commands)
+        build_module(BALLERINA_LANG_REPO_NAME, lang_build_commands)
         os.chdir("..")
 
     if args.skip_tests:
@@ -242,6 +242,8 @@ def main():
     for level in stdlib_modules_by_level:
         for module in stdlib_modules_by_level[level]:
             module_name = module['name']
+            print_block()
+            print_block()
 
             if from_module == module_name:
                 start_build = True
@@ -259,9 +261,9 @@ def main():
                     build_commands = commands.copy()
                     build_command.append("-x")
                     build_command.append("test")
-                    return_code = build_module(build_commands)
+                    return_code = build_module(module_name, build_commands)
                 else:
-                    return_code = build_module(commands)
+                    return_code = build_module(module_name, commands)
 
                 if return_code != 0:
                     exit_code = return_code
@@ -281,6 +283,8 @@ def main():
             exit(exit_code)
 
     if build_distribution:
+        print_block()
+        print_block()
         clone_repository(BALLERINA_DIST_REPO_NAME)
 
         os.chdir(BALLERINA_DIST_REPO_NAME)
@@ -289,7 +293,7 @@ def main():
         dist_build_commands = commands.copy()
         dist_build_commands.append("-x")
         dist_build_commands.append(":project-api-tests:test")
-        return_code = build_module(dist_build_commands)
+        return_code = build_module(BALLERINA_DIST_REPO_NAME, dist_build_commands)
         if return_code != 0:
             exit_code = return_code
             failed_modules.append(BALLERINA_DIST_REPO_NAME)
@@ -321,7 +325,6 @@ def process_module(module, lang_version, use_released_versions, update_stdlib_de
     checkout_branch(module_branch, keep_local_changes)
 
     print_info("Branch: " + module_branch)
-    print_block()
 
     module_version = get_version()
     print_info(f"Module {module_name} version: {module_version}")
@@ -334,7 +337,9 @@ def process_module(module, lang_version, use_released_versions, update_stdlib_de
         remove_dependency_files()
 
 
-def build_module(commands):
+def build_module(module_name, commands):
+    print_block()
+    print_info(f"Building Module: {module_name}")
     process = subprocess.run(commands)
 
     return process.returncode
