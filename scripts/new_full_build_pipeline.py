@@ -308,7 +308,7 @@ def process_module(module, lang_version, use_released_versions, update_stdlib_de
     print_block()
     print_info("Processing: " + module_name)
 
-    module_branch = None
+    module_branch = "master"
     if downstream_branch:
         module_branch = downstream_branch
         print_info(f"Using given downstream branch {module_branch}")
