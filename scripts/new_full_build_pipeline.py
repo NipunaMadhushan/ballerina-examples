@@ -250,15 +250,17 @@ def main():
         for module in stdlib_modules_by_level[level]:
             module_name = module['name']
             module_version_key = module['version_key']
-            print_block()
-            print_block()
 
             if from_module == module_name:
                 start_build = True
 
             if module_name in build_ignore_modules:
+                print_block()
+                print_block()
                 print_info(print_info("Skipping: " + module))
             elif start_build:
+                print_block()
+                print_block()
                 clone_repository(module_name)
 
                 os.chdir(module_name)
