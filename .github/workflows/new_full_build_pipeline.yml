@@ -39,7 +39,7 @@ jobs:
 
       - name: Build Modules
         run: |
-          python -u scripts/new_full_build_pipeline.py ./fbp --skip-tests --update-stdlib-dependencies --build-level 2
+          python -u scripts/new_full_build_pipeline.py ./fbp --skip-tests --update-stdlib-dependencies --patch-level 2201.4.x
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
