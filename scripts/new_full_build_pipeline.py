@@ -345,20 +345,20 @@ def build_module(module_name, commands):
 
 
 def remove_dependency_files(module_name):
-    if Path("ballerina/Dependencies.toml").is_file():
+    if Path("./ballerina/Dependencies.toml").is_file():
         print_info("Removing Dependencies.toml files in the ballerina directory")
         os.chdir("ballerina")
         subprocess.run("find", ".", "-name", "\"Dependencies.toml\"", "-delete")
         os.chdir("..")
 
     elif module_name == "module-ballerinai-transaction" and \
-            Path("transaction-ballerina/Dependencies.toml").is_file():
+            Path("./transaction-ballerina/Dependencies.toml").is_file():
         print_info("Removing Dependencies.toml files in the transaction-ballerina directory")
         os.chdir("transaction-ballerina")
         subprocess.run("find", ".", "-name", "\"Dependencies.toml\"", "-delete")
         os.chdir("..")
 
-    if Path("ballerina-tests/Dependencies.toml").is_file():
+    if Path("./ballerina-tests/Dependencies.toml").is_file():
         print_info("Removing Dependencies.toml files in the ballerina-tests directory")
         os.chdir("ballerina-tests")
         subprocess.run("find", ".", "-name", "\"Dependencies.toml\"", "-delete")
