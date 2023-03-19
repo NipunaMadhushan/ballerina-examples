@@ -270,6 +270,7 @@ def main():
                     exit_code = return_code
                     failed_modules.append(module_name)
                     if not continue_on_error:
+                        write_failed_modules(failed_modules)
                         exit(exit_code)
                 os.chdir("..")
 
