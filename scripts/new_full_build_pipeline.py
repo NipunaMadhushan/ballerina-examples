@@ -48,11 +48,11 @@ parser.add_argument('--use-released-versions', action="store_true",
                          " according to the patch level (e.g.; 2201.4.x). Must use '--patch-level' flag to specify " +
                          "patch level")
 parser.add_argument('--patch-level', help="Patch level for the build (e.g.; 2201.4.x)")
+parser.add_argument('--build-level', help="Build only a specific level (e.g.; 1)")
 parser.add_argument('--publish-to-local-central', action="store_true",
                     help="Publish all the modules to the local ballerina central repository")
 parser.add_argument('--skip-tests', action="store_true", help="Skip tests in the builds")
-parser.add_argument('--github-user', action="store_true",
-                    help="Github User to use for ballerina-lang repository")
+parser.add_argument('--github-user', help="Github User to use for ballerina-lang repository")
 parser.add_argument('--keep-local-changes', action="store_true",
                     help="Stop updating the repos from the origin. Keep the local changes")
 parser.add_argument('--up-to-module', help="Build up to the specified module")
