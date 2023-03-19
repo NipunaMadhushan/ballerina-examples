@@ -242,6 +242,7 @@ def main():
     for level in stdlib_modules_by_level:
         for module in stdlib_modules_by_level[level]:
             module_name = module['name']
+            module_version_key = module['version_key']
             print_block()
             print_block()
 
@@ -251,11 +252,11 @@ def main():
             if module_name in build_ignore_modules:
                 print_info(print_info("Skipping: " + module))
             elif start_build:
-                clone_repository(module['name'])
+                clone_repository(module_name)
 
                 os.chdir(module_name)
-                process_module(module, lang_version, use_released_versions, update_stdlib_dependencies,
-                               keep_local_changes, downstream_branch)
+                process_module(module_name, module_version_key, lang_version, use_released_versions, 
+                               update_stdlib_dependencies, keep_local_changes, downstream_branch)
 
                 if not skip_tests and test_module and test_module != module_name:
                     build_commands = commands.copy()
@@ -288,7 +289,7 @@ def main():
         clone_repository(BALLERINA_DIST_REPO_NAME)
 
         os.chdir(BALLERINA_DIST_REPO_NAME)
-        process_module(BALLERINA_DIST_REPO_NAME, lang_version, use_released_versions, update_stdlib_dependencies,
+        process_module(BALLERINA_DIST_REPO_NAME, None, lang_version, use_released_versions, update_stdlib_dependencies,
                        keep_local_changes, downstream_branch)
         dist_build_commands = commands.copy()
         dist_build_commands.append("-x")
@@ -302,12 +303,9 @@ def main():
         os.chdir("..")
 
 
-def process_module(module, lang_version, use_released_versions, update_stdlib_dependencies,
+def process_module(module_name, module_version_key, lang_version, use_released_versions, update_stdlib_dependencies,
                    keep_local_changes, downstream_branch):
     global stdlib_versions
-
-    module_name = module['name']
-    module_version_key = module['version_key']
 
     print_block()
     print_info("Processing: " + module_name)
