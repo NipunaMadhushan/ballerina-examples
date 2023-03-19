@@ -78,6 +78,7 @@ test_ignore_modules = []
 build_ignore_modules = []
 downstream_repo_branches = dict()
 released_version_data_file_url = None
+distribution_level = None
 
 
 def main():
@@ -107,6 +108,7 @@ def main():
     up_to_module = None
     from_module = None
     test_module = None
+    build_level = None
     build_distribution = True
 
     continue_on_error = False
@@ -207,9 +209,9 @@ def main():
         print_info("Building from the module: " + args.from_module)
         from_module = args.from_module
 
-    if args.up_to_module:
-        print_info("Building up to the module: " + args.up_to_module)
-        up_to_module = args.up_to_module
+    if args.build_level:
+        print_info("Building the level: " + args.build_level)
+        build_level = args.build_level
 
     if args.test_module:
         print_info("Building from the module: " + args.from_module)
@@ -240,6 +242,11 @@ def main():
     failed_modules = []
     exit_code = 0
     for level in stdlib_modules_by_level:
+        if build_level:
+            if int(build_level) == level:
+                start_build = True
+            else:
+                start_build = False
         for module in stdlib_modules_by_level[level]:
             module_name = module['name']
             module_version_key = module['version_key']
@@ -284,7 +291,13 @@ def main():
             write_failed_modules(failed_modules)
             exit(exit_code)
 
-    if build_distribution:
+    if build_level:
+        if int(build_level) == distribution_level:
+            start_build = True
+        else:
+            start_build = False
+            
+    if build_distribution and start_build:
         print_block()
         print_block()
         clone_repository(BALLERINA_DIST_REPO_NAME)
@@ -416,7 +429,6 @@ def read_released_stdlib_versions(url):
             config = ConfigObj(RELEASED_VERSION_PROPERTIES)
             for property in config.keys():
                 released_stdlib_versions[property] = config[property]
-
         else:
             print_error(f"Failed to access released version data from {url}")
             exit(1)
@@ -463,13 +475,17 @@ def read_stdlib_data(test_module):
 
 def read_data_for_fbp(stdlib_modules_data):
     global stdlib_modules_by_level
+    global distribution_level
 
     for module in stdlib_modules_data['standard_library']:
         name = module['name']
         level = module['level']
         version_key = module['version_key']
-        stdlib_modules_by_level[level] = stdlib_modules_by_level.get(level, []) + \
-                                         [{"name": name, "version_key": version_key}]
+        if name != BALLERINA_DIST_REPO_NAME:
+            stdlib_modules_by_level[level] = stdlib_modules_by_level.get(level, []) + \
+                                             [{"name": name, "version_key": version_key}]
+        else:
+            distribution_level = level
 
 
 def read_data_for_module_testing(stdlib_modules_data, test_module_name):
