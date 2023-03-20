@@ -264,7 +264,7 @@ def main():
                 clone_repository(module_name)
 
                 os.chdir(module_name)
-                process_module(module_name, module_version_key, lang_version, use_released_versions, 
+                process_module(module_name, module_version_key, lang_version, patch_level, use_released_versions, 
                                update_stdlib_dependencies, keep_local_changes, downstream_branch)
 
                 if not skip_tests and test_module and test_module != module_name:
@@ -305,8 +305,8 @@ def main():
         clone_repository(BALLERINA_DIST_REPO_NAME)
 
         os.chdir(BALLERINA_DIST_REPO_NAME)
-        process_module(BALLERINA_DIST_REPO_NAME, None, lang_version, use_released_versions, update_stdlib_dependencies,
-                       keep_local_changes, downstream_branch)
+        process_module(BALLERINA_DIST_REPO_NAME, None, lang_version, patch_level, use_released_versions, 
+                       update_stdlib_dependencies, keep_local_changes, downstream_branch)
         dist_build_commands = commands.copy()
         dist_build_commands.append("-x")
         dist_build_commands.append(":project-api-tests:test")
