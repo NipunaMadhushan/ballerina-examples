@@ -147,7 +147,7 @@ def main():
         clone_repository("ballerina-lang")
         if args.lang_branch:
             print_info("Using ballerina lang branch: " + args.lang_branch)
-            checkout_branch(lang_branch, keep_local_changes)
+            checkout_branch(args.lang_branch, keep_local_changes)
         else:
             print_info("Using ballerina lang branch: master (default)")
 
