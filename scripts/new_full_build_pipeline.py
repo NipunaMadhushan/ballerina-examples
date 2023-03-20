@@ -319,8 +319,8 @@ def main():
         os.chdir("..")
 
 
-def process_module(module_name, module_version_key, lang_version, use_released_versions, update_stdlib_dependencies,
-                   keep_local_changes, downstream_branch):
+def process_module(module_name, module_version_key, lang_version, patch_level, use_released_versions, 
+                   update_stdlib_dependencies, keep_local_changes, downstream_branch):
     global stdlib_versions
 
     print_block()
@@ -330,14 +330,20 @@ def process_module(module_name, module_version_key, lang_version, use_released_v
     if downstream_branch:
         module_branch = downstream_branch
         print_info(f"Using given downstream branch {module_branch}")
-    if module_name in downstream_repo_branches:
-        module_branch = downstream_repo_branches[module_name]
-        print_info(f"Using defined branch {module_branch} in {TEST_IGNORE_MODULES_JSON}")
-    elif use_released_versions:
-        module_branch = f"v{released_stdlib_versions[module_version_key]}"
-        print_info(f"Using released version tag {module_branch} in {released_version_data_file_url}")
+    
+    if module_name != BALLERINA_DIST_REPO_NAME:
+        if module_name in downstream_repo_branches:
+            module_branch = downstream_repo_branches[module_name]
+            print_info(f"Using defined branch {module_branch} in {TEST_IGNORE_MODULES_JSON}")
+        elif use_released_versions:
+            if module_version_key in released_stdlib_versions:
+                module_branch = f"v{released_stdlib_versions[module_version_key]}"
+                print_info(f"Using released version tag {module_branch} in {released_version_data_file_url}")
+    elif patch_level:
+        module_branch = patch_level
+        print_info(f"Using patch branch {module_branch} for {BALLERINA_DIST_REPO_NAME}")
+        
     checkout_branch(module_branch, keep_local_changes)
-
     print_info("Branch: " + module_branch)
 
     module_version = get_version()
