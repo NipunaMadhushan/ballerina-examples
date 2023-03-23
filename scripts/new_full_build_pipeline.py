@@ -269,8 +269,8 @@ def main():
 
                 if not skip_tests and test_module and test_module != module_name:
                     build_commands = commands.copy()
-                    build_command.append("-x")
-                    build_command.append("test")
+                    build_commands.append("-x")
+                    build_commands.append("test")
                     return_code = build_module(module_name, build_commands)
                 else:
                     return_code = build_module(module_name, commands)
