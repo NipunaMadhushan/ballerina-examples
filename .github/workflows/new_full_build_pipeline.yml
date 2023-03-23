@@ -78,7 +78,7 @@ jobs:
         shell: bash
         run: |
           commands=("./fbp")
-          if [${{ github.event.inputs.lang_version != ''}} ]
+          if (${{ github.event.inputs.lang_version != ''}})
           then
             commands+=(${{ github.event.inputs.lang_version }});
           else
