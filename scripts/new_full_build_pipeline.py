@@ -447,8 +447,8 @@ def read_released_stdlib_versions(url):
 
 def checkout_branch(branch, keep_local_changes):
     try:
-        return_code = subprocess.run(["git", "checkout", branch])
-        if return_code != 0:
+        process = subprocess.run(["git", "checkout", branch])
+        if process.return_code != 0:
             print_warn(f"Failed to checkout branch {branch}. Default branch will be used.")
         if not keep_local_changes:
             subprocess.run(["git", "reset", "--hard", "origin/" + branch])
