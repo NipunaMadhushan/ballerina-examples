@@ -78,19 +78,19 @@ jobs:
         run: |
           commands=("./fbp")
 
-          if (${{ github.event.inputs.lang_version != ''}})
+          if (${{github.event.inputs.lang_version != ''}})
           then
             commands+=(${{ github.event.inputs.lang_version }})
           else
             commands+=(${{ github.event.inputs.lang_branch }})
           fi
 
-          if (${{ github.event.inputs.skip_tests = 'true'}})
+          if (${{github.event.inputs.skip_tests}})
           then
             commands+=("--skip-tests")
           fi
 
-          if (${{ github.event.inputs.patch_level != 'master'}})
+          if (${{github.event.inputs.patch_level != 'master'}})
           then
             commands+=("--patch-level" "${{ github.event.inputs.patch_level}}")
           fi
