@@ -10,15 +10,6 @@ on:
       lang_version:
         description: 'ballerina-lang version [OPTIONAL] (This will use the version instead of a branch)'
         required: false
-      skip_tests:
-        type: boolean
-        description: 'Skip tests'
-        deprecationMessage: 'true or false'
-        required: true
-#        options:
-#          - 'true'
-#          - 'false'
-#        default: 'false'
       patch_level:
         type: string
         description: 'Patch Level (e.g.; 2201.4.x, 2201.3.x, master)'
@@ -31,15 +22,16 @@ on:
       downstream_branch:
         description: 'downstream repo branch [OPTIONAL]'
         required: false
+      skip_tests:
+        type: boolean
+        description: 'Skip tests'
+        deprecationMessage: 'true or false'
+        required: true
       update_stdlib_dependencies:
-        type: choice
+        type: boolean
         description: 'Update stdlib dependencies'
         deprecationMessage: 'true or false'
         required: true
-        options:
-          - 'true'
-          - 'false'
-        default: 'true'
 
 jobs:
   build-pipeline:
@@ -85,11 +77,6 @@ jobs:
             commands+=(${{ github.event.inputs.lang_branch }})
           fi
 
-          if (${{github.event.inputs.skip_tests}})
-          then
-            commands+=("--skip-tests")
-          fi
-
           if (${{github.event.inputs.patch_level != 'master'}})
           then
             commands+=("--patch-level" "${{ github.event.inputs.patch_level}}")
@@ -100,7 +87,12 @@ jobs:
             commands+=("--downstream-branch" "${{ github.event.inputs.downstream_branch}}")
           fi
 
-          if (${{ github.event.inputs.update_stdlib_dependencies = 'true'}})
+          if (${{github.event.inputs.skip_tests}})
+          then
+            commands+=("--skip-tests")
+          fi
+
+          if (${{ github.event.inputs.update_stdlib_dependencies}})
           then
             commands+=("--update-stdlib-dependencies")
           fi
