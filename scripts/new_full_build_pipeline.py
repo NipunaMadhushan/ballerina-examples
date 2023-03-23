@@ -144,14 +144,14 @@ def main():
         print_info("Using ballerina lang version: " + args.lang_version)
         lang_version = args.lang_version
     else:
-        clone_repository("ballerina-lang")
+        clone_repository(BALLERINA_LANG_REPO_NAME)
+        os.chdir(BALLERINA_LANG_REPO_NAME)
         if args.lang_branch:
             print_info("Using ballerina lang branch: " + args.lang_branch)
             checkout_branch(args.lang_branch, keep_local_changes)
         else:
             print_info("Using ballerina lang branch: master (default)")
 
-        os.chdir("ballerina-lang")
         lang_version = get_version()
         print_info(f"Lang version: {lang_version}")
         lang_build_commands = ["./gradlew", "clean", "build", "-x", "test", "-x", "check", "--scan", "--stacktrace",
