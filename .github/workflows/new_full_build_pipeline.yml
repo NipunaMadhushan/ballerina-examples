@@ -2,8 +2,46 @@ name: Daily Full Build Pipeline (New)
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '30 18 * * *'   # 00:00 in LK time (GMT+5:30)
+    inputs:
+      lang_branch:
+        description: 'ballerina-lang branch'
+        required: true
+        default: 'master'
+      lang_version:
+        description: 'ballerina-lang version (This will use the version instead of a branch)'
+        required: false
+        default: '2201.4.0'
+      enable_tests:
+        type: choice
+        description: 'Enable tests'
+        deprecationMessage: 'true or false'
+        required: true
+        options:
+          - 'true'
+          - 'false'
+        default: 'true'
+      patch_level:
+        type: choice
+        description: 'Patch Level (e.g.; 2201.4.x, 2201.3.x, master)'
+        required: true
+        options:
+          - 'master'
+          - '2201.4.x'
+          - '2201.3.x'
+        default: 'master'
+      downstream_branch:
+        description: 'ballerina-lang branch'
+        required: false
+        default: 'master'
+      update_stdlib_dependencies:
+        type: choice
+        description: 'Update stdlib dependencies'
+        deprecationMessage: 'true or false'
+        required: true
+        options:
+          - 'true'
+          - 'false'
+        default: 'true'
 
 jobs:
   build-pipeline:
@@ -38,8 +76,22 @@ jobs:
           pip install requests
 
       - name: Build Modules
+        shell: bash
         run: |
-          python -u scripts/new_full_build_pipeline.py ./fbp --skip-tests --update-stdlib-dependencies
+          commands=("./fbp")
+          if [${{ github.event.inputs.lang_version }}]
+          then
+            commands+=(${{ github.event.inputs.lang_version }});
+          else
+            commands+=(${{ github.event.inputs.lang_branch }});
+          fi
+
+          for value in "${commands[@]}"
+          do
+            echo $value
+          done
+
+#          python -u scripts/new_full_build_pipeline.py ./fbp --skip-tests --update-stdlib-dependencies
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
