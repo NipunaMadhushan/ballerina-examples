@@ -10,15 +10,15 @@ on:
       lang_version:
         description: 'ballerina-lang version [OPTIONAL] (This will use the version instead of a branch)'
         required: false
-      enable_tests:
+      skip_tests:
         type: choice
-        description: 'Enable tests'
+        description: 'Skip tests'
         deprecationMessage: 'true or false'
         required: true
         options:
           - 'true'
           - 'false'
-        default: 'true'
+        default: 'false'
       patch_level:
         type: choice
         description: 'Patch Level (e.g.; 2201.4.x, 2201.3.x, master)'
@@ -29,9 +29,8 @@ on:
           - '2201.3.x'
         default: 'master'
       downstream_branch:
-        description: 'ballerina-lang branch'
+        description: 'downstream repo branch [OPTIONAL]'
         required: false
-        default: 'master'
       update_stdlib_dependencies:
         type: choice
         description: 'Update stdlib dependencies'
@@ -78,11 +77,37 @@ jobs:
         shell: bash
         run: |
           commands=("./fbp")
+
           if (${{ github.event.inputs.lang_version != ''}})
           then
             commands+=(${{ github.event.inputs.lang_version }});
           else
             commands+=(${{ github.event.inputs.lang_branch }});
+          fi
+
+          if (${{ github.event.inputs.skip_tests = 'true'}})
+          then
+            commands+=("--skip-tests");
+          fi
+
+          if (${{ github.event.inputs.skip_tests = 'true'}})
+          then
+            commands+=("--skip-tests");
+          fi
+
+          if (${{ github.event.inputs.patch_level != 'master'}})
+          then
+            commands+=("--patch-level" "${{ github.event.inputs.patch_level}}");
+          fi
+
+          if (${{ github.event.inputs.downstream_branch != ''}})
+          then
+            commands+=("--downstream-branch" "${{ github.event.inputs.downstream_branch}}");
+          fi
+
+          if (${{ github.event.inputs.update_stdlib_dependencies = 'true'}})
+          then
+            commands+=("--update-stdlib-dependencies");
           fi
 
           for value in "${commands[@]}"
