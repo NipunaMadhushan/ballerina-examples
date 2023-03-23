@@ -80,34 +80,34 @@ jobs:
 
           if (${{ github.event.inputs.lang_version != ''}})
           then
-            commands+=(${{ github.event.inputs.lang_version }});
+            commands+=(${{ github.event.inputs.lang_version }})
           else
-            commands+=(${{ github.event.inputs.lang_branch }});
+            commands+=(${{ github.event.inputs.lang_branch }})
           fi
 
           if (${{ github.event.inputs.skip_tests = 'true'}})
           then
-            commands+=("--skip-tests");
+            commands+=("--skip-tests")
           fi
 
           if (${{ github.event.inputs.skip_tests = 'true'}})
           then
-            commands+=("--skip-tests");
+            commands+=("--skip-tests")
           fi
 
           if (${{ github.event.inputs.patch_level != 'master'}})
           then
-            commands+=("--patch-level" "${{ github.event.inputs.patch_level}}");
+            commands+=("--patch-level" "${{ github.event.inputs.patch_level}}")
           fi
 
           if (${{ github.event.inputs.downstream_branch != ''}})
           then
-            commands+=("--downstream-branch" "${{ github.event.inputs.downstream_branch}}");
+            commands+=("--downstream-branch" "${{ github.event.inputs.downstream_branch}}")
           fi
 
           if (${{ github.event.inputs.update_stdlib_dependencies = 'true'}})
           then
-            commands+=("--update-stdlib-dependencies");
+            commands+=("--update-stdlib-dependencies")
           fi
 
           for value in "${commands[@]}"
