@@ -90,11 +90,6 @@ jobs:
             commands+=("--skip-tests")
           fi
 
-          if (${{ github.event.inputs.skip_tests = 'true'}})
-          then
-            commands+=("--skip-tests")
-          fi
-
           if (${{ github.event.inputs.patch_level != 'master'}})
           then
             commands+=("--patch-level" "${{ github.event.inputs.patch_level}}")
