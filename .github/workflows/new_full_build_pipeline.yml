@@ -8,9 +8,8 @@ on:
         required: true
         default: 'master'
       lang_version:
-        description: 'ballerina-lang version (This will use the version instead of a branch)'
+        description: 'ballerina-lang version [OPTIONAL] (This will use the version instead of a branch)'
         required: false
-        default: '2201.4.0'
       enable_tests:
         type: choice
         description: 'Enable tests'
@@ -79,7 +78,7 @@ jobs:
         shell: bash
         run: |
           commands=("./fbp")
-          if [${{ github.event.inputs.lang_version }}]
+          if [${{ github.event.inputs.lang_version }} != '']
           then
             commands+=(${{ github.event.inputs.lang_version }});
           else
