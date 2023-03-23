@@ -11,16 +11,16 @@ on:
         description: 'ballerina-lang version [OPTIONAL] (This will use the version instead of a branch)'
         required: false
       skip_tests:
-        type: choice
+        type: boolean
         description: 'Skip tests'
         deprecationMessage: 'true or false'
         required: true
-        options:
-          - 'true'
-          - 'false'
-        default: 'false'
+#        options:
+#          - 'true'
+#          - 'false'
+#        default: 'false'
       patch_level:
-        type: choice
+        type: string
         description: 'Patch Level (e.g.; 2201.4.x, 2201.3.x, master)'
         required: true
         options:
