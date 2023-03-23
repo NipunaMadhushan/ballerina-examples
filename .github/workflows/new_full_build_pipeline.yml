@@ -65,10 +65,12 @@ jobs:
           pip install configobj
           pip install requests
 
-      - name: Build Modules
+      - name: Set command
+        id: set-command
         shell: bash
         run: |
-          commands=("./fbp")
+          FILE_PATH="./fbp"
+          commands=($FILE_PATH)
 
           if (${{github.event.inputs.lang_version != ''}})
           then
@@ -101,13 +103,14 @@ jobs:
           for value in "${commands[@]}"
           do
             command_string+=" $value"
-            echo $value
           done
 
           echo $command_string
+          echo "::set-output name=command::$command_string"
 
-          python -u scripts/new_full_build_pipeline.py $command_string
-#          python -u scripts/new_full_build_pipeline.py ./fbp 2201.4.x --patch-level 2201.4.x --skip-tests --update-stdlib-dependencies
+      - name: Build Modules
+        run: |
+          python -u scripts/new_full_build_pipeline.py ${{ steps.set-command.outputs.command }}
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
