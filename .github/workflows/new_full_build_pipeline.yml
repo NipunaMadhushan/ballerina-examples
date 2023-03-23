@@ -11,7 +11,7 @@ on:
         description: 'ballerina-lang version [OPTIONAL] (This will use the version instead of a branch)'
         required: false
       patch_level:
-        type: string
+        type: choice
         description: 'Patch Level (e.g.; 2201.4.x, 2201.3.x, master)'
         required: true
         options:
