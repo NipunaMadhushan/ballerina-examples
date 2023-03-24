@@ -45,5 +45,5 @@ jobs:
       - name: Echo version
         run: |
           TEST="  test   "
-          echo $TEST
-          echo ${TEST##*( )}
+          echo "Test: $TEST"
+          echo "Test: ${TEST##*( )}"
