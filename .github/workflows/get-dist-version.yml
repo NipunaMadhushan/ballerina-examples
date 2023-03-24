@@ -23,10 +23,9 @@ jobs:
       - name: Clone ballerina-distribution
         run: |
           git clone https://github.com/ballerina-platform/ballerina-distribution.git
-
-      - name: Build ballerina-distribution
-        working-directory: ballerina-distribution
-        run: ./graldlew clean build -x check -x test --stacktrace --scan
+#      - name: Build ballerina-distribution
+#        working-directory: ballerina-distribution
+#        run: ./gradlew clean build -x check -x test --stacktrace --scan
       - name: Get project version
         id: project-version
         run: |
