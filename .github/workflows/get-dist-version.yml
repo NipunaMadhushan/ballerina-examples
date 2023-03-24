@@ -41,3 +41,9 @@ jobs:
           echo ${{ steps.project-version.outputs.version }}
           echo ${{ steps.project-version.outputs.sversion }}
           echo ${{ steps.project-version.outputs.codename }}
+
+      - name: Echo version
+        run: |
+          TEST="  test   "
+          echo $TEST
+          echo ${TEST##*( )}
