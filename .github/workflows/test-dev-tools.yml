@@ -62,7 +62,7 @@ jobs:
       - name: Build Dev Tools Repo
         run : |
           cd ballerina-dev-tools
-          ./gradlew clean build --stacktrace --scan --console=plain --no-daemon --continue -x :architecture-model-generator:architecture-model-generator-ls-extension:test
+          ./gradlew build 
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
