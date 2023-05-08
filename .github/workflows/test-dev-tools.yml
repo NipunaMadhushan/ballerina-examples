@@ -51,9 +51,6 @@ jobs:
       - name: Change Lang Version
         run: |
           perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${{ steps.lang-version.outputs.version }}/" ballerina-dev-tools/gradle.properties
-      - name: Change Lang Version
-        run: |
-          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=2201.4.1-20230310-042200-6f7ef9a8/" ballerina-dev-tools/gradle.properties
       - name: Echo Lang Version
         run: |
           LANG_VERSION=$((grep -w 'ballerinaLangVersion') < ballerina-dev-tools/gradle.properties)
