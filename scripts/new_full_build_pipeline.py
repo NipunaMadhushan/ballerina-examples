@@ -167,14 +167,14 @@ def main():
         commands.append("test")
 
     if args.update_stdlib_dependencies:
-        print_info("Using local SNAPSHOT builds for upper level dependencies")
+        print_info("Using local SNAPSHOT builds for upper level stdlib dependencies")
         commands.append("publishToMavenLocal")
         update_stdlib_dependencies = True
     else:
-        print_info("Using existing versions for the builds")
+        print_info("Using existing upper level stdlib versions for the builds")
 
     if args.build_released_versions:
-        print_info("Using released versions in " +
+        print_info("Using released versions for build in " +
                    "https://github.com/ballerina-platform/ballerina-distribution/blob/master/gradle.properties")
         build_released_versions = True
 
@@ -258,12 +258,10 @@ def main():
                 start_build = True
 
             if module_name in build_ignore_modules:
-                print_block()
-                print_block()
+                print_separation_block()
                 print_info(print_info("Skipping: " + module))
             elif start_build:
-                print_block()
-                print_block()
+                print_separation_block()
                 clone_repository(module_name)
 
                 os.chdir(module_name)
@@ -305,8 +303,7 @@ def main():
         start_build = False
 
     if build_distribution and start_build:
-        print_block()
-        print_block()
+        print_separation_block()
         clone_repository(BALLERINA_DIST_REPO_NAME)
 
         os.chdir(BALLERINA_DIST_REPO_NAME)
@@ -622,6 +619,15 @@ def print_warn(message):
 
 
 def print_block():
+    print()
+    print(f'{Fore.GREEN}############################################################################################')
+    print()
+
+
+def print_separation_block():
+    print()
+    print()
+    print(f'{Fore.GREEN}############################################################################################')
     print()
     print(f'{Fore.GREEN}############################################################################################')
     print()
