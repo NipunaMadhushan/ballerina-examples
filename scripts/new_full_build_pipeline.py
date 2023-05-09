@@ -22,6 +22,7 @@ BALLERINA_DIST_REPO_NAME = "ballerina-distribution"
 
 # File names
 GRADLE_PROPERTIES = "gradle.properties"
+INSTALLER_TEST_DIRECTORY = "ballerina-test-automation"
 RELEASED_VERSION_PROPERTIES = "released_version.properties"
 FAILED_MODULES_TEXT_FILE = "failed_modules.txt"
 
@@ -42,7 +43,7 @@ parser.add_argument('--downstream-branch', help="Branch to build the downstream 
 parser.add_argument('--update-stdlib-dependencies', action="store_true",
                     help="Replace all the standard library dependent versions with 'SNAPSHOT' versions. " +
                          "This is helpful to incrementally build libraries on top of a local change")
-parser.add_argument('--use-released-versions', action="store_true",
+parser.add_argument('--build-released-versions', action="store_true",
                     help="Use released versions in " +
                          "https://github.com/ballerina-platform/ballerina-distribution/blob/master/gradle.properties" +
                          " according to the patch level (e.g.; 2201.4.x). Must use '--patch-level' flag to specify " +
@@ -102,7 +103,7 @@ def main():
 
     skip_tests = False
     update_stdlib_dependencies = False
-    use_released_versions = False
+    build_released_versions = False
     keep_local_changes = False
 
     up_to_module = None
@@ -172,10 +173,10 @@ def main():
     else:
         print_info("Using existing versions for the builds")
 
-    if args.use_released_versions:
+    if args.build_released_versions:
         print_info("Using released versions in " +
                    "https://github.com/ballerina-platform/ballerina-distribution/blob/master/gradle.properties")
-        use_released_versions = True
+        build_released_versions = True
 
     if args.patch_level:
         print_info(f"Using patch level: {args.patch_level}")
@@ -214,7 +215,7 @@ def main():
         build_level = args.build_level
 
     if args.test_module:
-        print_info("Building from the module: " + args.from_module)
+        print_info("Testing module: " + args.test_module)
         test_module = args.test_module
         print_warn("'--test-module' flag will override '--up-to-module' & '--from-module' flags. It will skip the " +
                    "tests for dependency modules and dependent modules if '--update-stdlib-dependencies' flag " +
@@ -225,14 +226,14 @@ def main():
         remove_after_build = True
 
     # Get released stdlib versions from ballerina-distribution/gradle.properties
-    if use_released_versions:
+    if build_released_versions:
         if patch_level:
             released_version_data_file_url = "https://raw.githubusercontent.com/ballerina-platform/" + \
                                              f"ballerina-distribution/{patch_level}/gradle.properties"
             read_released_stdlib_versions(released_version_data_file_url)
         else:
             print_error("Patch Level must be defined using '--patch-level' flag if you are using " +
-                        "'--use-released-versions' flag")
+                        "'--build-released-versions' flag")
             exit(1)
 
     read_stdlib_data(test_module)
@@ -241,7 +242,9 @@ def main():
     start_build = False if from_module else True
     failed_modules = []
     exit_code = 0
-    for level in stdlib_modules_by_level:
+    module_levels = list(stdlib_modules_by_level.keys())
+    module_levels.sort()
+    for level in module_levels:
         if build_level:
             if int(build_level) == level:
                 start_build = True
@@ -264,7 +267,7 @@ def main():
                 clone_repository(module_name)
 
                 os.chdir(module_name)
-                process_module(module_name, module_version_key, lang_version, patch_level, use_released_versions, 
+                process_module(module_name, module_version_key, lang_version, patch_level, build_released_versions,
                                update_stdlib_dependencies, keep_local_changes, downstream_branch)
 
                 if not skip_tests and test_module and test_module != module_name:
@@ -298,18 +301,24 @@ def main():
             start_build = True
         else:
             start_build = False
-            
+    if test_module and test_module != BALLERINA_DIST_REPO_NAME:
+        start_build = False
+
     if build_distribution and start_build:
         print_block()
         print_block()
         clone_repository(BALLERINA_DIST_REPO_NAME)
 
         os.chdir(BALLERINA_DIST_REPO_NAME)
-        process_module(BALLERINA_DIST_REPO_NAME, None, lang_version, patch_level, use_released_versions, 
+        process_module(BALLERINA_DIST_REPO_NAME, None, lang_version, patch_level, build_released_versions,
                        update_stdlib_dependencies, keep_local_changes, downstream_branch)
         dist_build_commands = commands.copy()
         dist_build_commands.append("-x")
         dist_build_commands.append(":project-api-tests:test")
+        if not skip_tests and test_module and test_module != BALLERINA_DIST_REPO_NAME:
+            dist_build_commands.append("-x")
+            dist_build_commands.append("test")
+
         return_code = build_module(BALLERINA_DIST_REPO_NAME, dist_build_commands)
         if return_code != 0:
             exit_code = return_code
@@ -318,8 +327,10 @@ def main():
             exit(exit_code)
         os.chdir("..")
 
+        update_installer_versions(lang_version)
 
-def process_module(module_name, module_version_key, lang_version, patch_level, use_released_versions, 
+
+def process_module(module_name, module_version_key, lang_version, patch_level, use_released_versions,
                    update_stdlib_dependencies, keep_local_changes, downstream_branch):
     global stdlib_versions
 
@@ -330,7 +341,7 @@ def process_module(module_name, module_version_key, lang_version, patch_level, u
     if downstream_branch:
         module_branch = downstream_branch
         print_info(f"Using given downstream branch {module_branch}")
-    
+
     if module_name != BALLERINA_DIST_REPO_NAME:
         if module_name in downstream_repo_branches:
             module_branch = downstream_repo_branches[module_name]
@@ -342,7 +353,7 @@ def process_module(module_name, module_version_key, lang_version, patch_level, u
     elif patch_level:
         module_branch = patch_level
         print_info(f"Using patch branch {module_branch} for {BALLERINA_DIST_REPO_NAME}")
-        
+
     checkout_branch(module_branch, keep_local_changes)
     print_info("Branch: " + module_branch)
 
@@ -445,10 +456,31 @@ def read_released_stdlib_versions(url):
         exit(1)
 
 
+def update_installer_versions(lang_version):
+    print_info(f"Updating installer test versions..")
+
+    ballerina_lang_configs = ConfigObj(BALLERINA_LANG_REPO_NAME + "/" + GRADLE_PROPERTIES)
+    ballerina_distribution_configs = ConfigObj(BALLERINA_DIST_REPO_NAME + "/" + GRADLE_PROPERTIES)
+    installer_test_configs = ConfigObj(BALLERINA_DIST_REPO_NAME + "/" + INSTALLER_TEST_DIRECTORY + "/" +
+                                       GRADLE_PROPERTIES)
+
+    display_text = lang_version.split("-")[0]
+    swan_lake_latest_version = "swan-lake-" + display_text
+    spec_version = ballerina_lang_configs['specVersion']
+    update_tool_version = ballerina_distribution_configs['ballerinaCommandVersion']
+
+    installer_test_configs['swan-lake-latest-version'] = swan_lake_latest_version
+    installer_test_configs['swan-lake-latest-version-display-text'] = display_text
+    installer_test_configs['swan-lake-latest-spec-version'] = spec_version
+    installer_test_configs['latest-tool-version'] = update_tool_version
+    installer_test_configs['swan-lake-latest-tool-version'] = update_tool_version
+    installer_test_configs.write()
+
+
 def checkout_branch(branch, keep_local_changes):
     try:
         process = subprocess.run(["git", "checkout", branch])
-        if process.return_code != 0:
+        if process.returncode != 0:
             print_warn(f"Failed to checkout branch {branch}. Default branch will be used.")
         if not keep_local_changes:
             subprocess.run(["git", "reset", "--hard", "origin/" + branch])
@@ -508,27 +540,26 @@ def read_data_for_module_testing(stdlib_modules_data, test_module_name):
         for dependent in dependents:
             module_dependencies[dependent] = module_dependencies.get(dependent, []) + [module_name]
 
-    if not test_module_name in standard_library_data.keys():
+    if test_module_name not in standard_library_data.keys():
         print_error(f"Desired module {test_module_name} for testing was not found in {MODULE_LIST_JSON}")
         exit(1)
 
     module_list = {test_module_name}
     while module_list:
         current_module_name = module_list.pop()
-        if current_module_name != test_module_name:
-            level = standard_library_data[current_module_name]['level']
-            version_key = standard_library_data[current_module_name]['version_key']
-            if level in stdlib_modules_by_level.keys():
-                repeated = False
-                for module in stdlib_modules_by_level[level]:
-                    if module["name"] == current_module_name:
-                        repeated = True
-                        break
-                if not repeated:
-                    stdlib_modules_by_level[level] = stdlib_modules_by_level.get(level, []) + \
-                                                     [{"name": current_module_name, "version_key": version_key}]
-            else:
-                stdlib_modules_by_level[level] = [{"name": current_module_name, "version_key": version_key}]
+        level = standard_library_data[current_module_name]['level']
+        version_key = standard_library_data[current_module_name]['version_key']
+        if level in stdlib_modules_by_level.keys():
+            repeated = False
+            for module in stdlib_modules_by_level[level]:
+                if module["name"] == current_module_name:
+                    repeated = True
+                    break
+            if not repeated:
+                stdlib_modules_by_level[level] = stdlib_modules_by_level.get(level, []) + \
+                                                 [{"name": current_module_name, "version_key": version_key}]
+        else:
+            stdlib_modules_by_level[level] = [{"name": current_module_name, "version_key": version_key}]
 
         if current_module_name in module_dependencies.keys():
             dependencies = set(module_dependencies[current_module_name])
