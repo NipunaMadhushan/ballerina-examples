@@ -109,7 +109,7 @@ jobs:
           echo "::set-output name=command::$command_string"
       - name: Build Modules
         run: |
-          python -u dependabot/full_build_script.py ${{ steps.set-command.outputs.command }}
+          python -u scripts/new_full_build_pipeline.py ${{ steps.set-command.outputs.command }}
         env:
           BALLERINA_BOT_USERNAME: ${{ secrets.BALLERINA_BOT_USERNAME }}
           BALLERINA_BOT_TOKEN: ${{ secrets.BALLERINA_BOT_TOKEN }}
