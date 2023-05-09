@@ -16,6 +16,7 @@ on:
         required: true
         options:
           - 'master'
+          - '2201.5.x'
           - '2201.4.x'
           - '2201.3.x'
         default: 'master'
