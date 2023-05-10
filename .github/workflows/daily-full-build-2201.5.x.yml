@@ -151,6 +151,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 10.22.1
+      - name: Download Ballerina Lang Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: Ballerina Lang Artifacts
+          path: ~/.m2/
       - name: Build ballerina-distribution
         run: |
           python -u scripts/new_full_build_pipeline.py ./ --lang-version ${{ needs.build-lang.outputs.lang-version }} \
