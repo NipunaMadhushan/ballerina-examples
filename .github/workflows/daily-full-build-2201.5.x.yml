@@ -56,7 +56,7 @@ jobs:
       - name: Get lang version
         id: lang-version
         run: |
-          VERSION=$((grep -w "version" | cut -d= -f2 | cut -d- -f1 | xargs) < ballerina-lang/gradle.properties)
+          VERSION=$((grep -w "version" | cut -d= -f2 | xargs) < ballerina-lang/gradle.properties)
           echo "::set-output name=version::$VERSION"
       - name: Archive Lang Artifacts
         uses: actions/upload-artifact@v2
