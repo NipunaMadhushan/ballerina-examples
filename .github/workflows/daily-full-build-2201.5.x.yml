@@ -390,9 +390,9 @@ jobs:
         shell: cmd
       - name: Update Installer Test Configs
         run: |
-          set DISPLAY_TEXT=2201.4.2
-          set SWAN_LAKE_LATEST_VERSION=swan-lake-%DISPLAY_TEXT%
-          set SPEC_VERSION=2022R4
+          DISPLAY_TEXT=${{ needs.build-distribution.outputs.short-version }}
+          SWAN_LAKE_LATEST_VERSION=swan-lake-$DISPLAY_TEXT
+          SPEC_VERSION=${{ needs.build-lang.outputs.spec-version }}
 
           echo %DISPLAY_TEXT%
           echo %SWAN_LAKE_LATEST_VERSION%
