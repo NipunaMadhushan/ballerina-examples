@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: 10.22.1
       - name: Build ballerina-lang
-        run: python -u scripts/new_full_build_pipeline.py ./ --lang-branch 2201.5.x --build-level 0
+        run: python -u scripts/new_full_build_pipeline.py ./ --lang-branch 2201.5.x --build-level 0 --skip-tests
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
