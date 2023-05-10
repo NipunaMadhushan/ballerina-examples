@@ -367,7 +367,7 @@ jobs:
 
   nballerina-build:
     needs: build-distribution
-    name: nBallerina build
+    name: Build nBallerina
     runs-on: ubuntu-latest
 
     steps:
