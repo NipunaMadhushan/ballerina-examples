@@ -31,7 +31,7 @@ jobs:
       - name: Update Installer Test Configs
         run: |
           set DISPLAY_TEXT="2201.4.2"
-          set SWAN_LAKE_LATEST_VERSION="swan-lake-$DISPLAY_TEXT"
+          set SWAN_LAKE_LATEST_VERSION="swan-lake-%DISPLAY_TEXT%"
           set SPEC_VERSION="2022R4"
 
           echo %DISPLAY_TEXT%
