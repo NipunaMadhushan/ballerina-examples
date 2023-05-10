@@ -162,7 +162,7 @@ def main():
         lang_version = get_version()
         print_info(f"Lang version: {lang_version}")
         lang_build_commands = ["./gradlew", "clean", "build", "--scan", "--stacktrace",
-                               "publishToMavenLocal"]
+                               "publishToMavenLocal", "-x", "check"]
         if skip_tests:
             lang_build_commands.append("-x")
             lang_build_commands.append("test")
