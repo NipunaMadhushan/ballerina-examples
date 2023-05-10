@@ -222,7 +222,7 @@ jobs:
         run: sudo dpkg -i ballerina-distribution/installers/linux-deb/target/ballerina-*-linux-x64.deb
       - name: Update Installer Test Configs
         run: |
-          DISPLAY_TEXT=${{ needs.build-distribution.outputs.short-version }}
+          DISPLAY_TEXT=${{ steps.project-version.outputs.sVersion }}
           SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
           SPEC_VERSION=${{ needs.build-lang.outputs.spec-version }}
           perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-distribution/ballerina-test-automation/gradle.properties
