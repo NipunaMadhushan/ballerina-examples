@@ -3,6 +3,9 @@ name: Daily Full Build Pipeline (2201.5.x)
 on:
   workflow_dispatch:
 
+env:
+  PATCH_LEVEL: 2201.5.x
+
 jobs:
   build-lang:
     name: Build ballerina-lang
@@ -32,7 +35,7 @@ jobs:
         with:
           node-version: 10.22.1
       - name: Build ballerina-lang
-        run: python -u scripts/new_full_build_pipeline.py ./ --lang-branch 2201.5.x --build-level 0 --skip-tests
+        run: python -u scripts/new_full_build_pipeline.py ./ --lang-branch $PATCH_LEVEL --build-level 0 --skip-tests
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
@@ -45,7 +48,7 @@ jobs:
           FILE="failed_modules.txt"
 
           while read module; do
-          python3 dependabot/notify_full_build_failure.py $module 2201.5.x;
+          python3 dependabot/notify_full_build_failure.py $module $PATCH_LEVEL;
           done < ${FILE}
         env:
           CHAT_ID: ${{ secrets.NOTIFICATIONS_CHAT_ID }}
@@ -57,7 +60,9 @@ jobs:
         id: lang-version
         run: |
           VERSION=$((grep -w "version" | cut -d= -f2 | xargs) < ballerina-lang/gradle.properties)
+          SPEC_VERSION=$((grep -w "specVersion" | cut -d= -f2 | xargs) < ballerina-lang/gradle.properties)
           echo "::set-output name=version::$VERSION"
+          echo "::set-output name=specVersion::$SPEC_VERSION"
       - name: Archive Lang Artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -65,6 +70,7 @@ jobs:
           path: ~/.m2/
     outputs:
       lang-version: ${{ steps.lang-version.outputs.version }}
+      spec-version: ${{ steps.lang-version.outputs.specVersion }}
 
   build-stdlibs:
     name: Build Standard Libraries & Tools
@@ -101,7 +107,7 @@ jobs:
       - name: Build Standard Libraries & Tools
         run: |
           python -u scripts/new_full_build_pipeline.py ./ --lang-version ${{ needs.build-lang.outputs.lang-version }} \
-          --build-released-versions --patch-level 2201.5.x --skip-build-distribution --continue-on-error --skip-tests
+          --build-released-versions --patch-level $PATCH_LEVEL --skip-build-distribution --continue-on-error --skip-tests
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
@@ -114,7 +120,7 @@ jobs:
           FILE="failed_modules.txt"
 
           while read module; do
-          python3 dependabot/notify_full_build_failure.py $module 2201.5.x;
+          python3 dependabot/notify_full_build_failure.py $module $PATCH_LEVEL;
           done < ${FILE}
         env:
           CHAT_ID: ${{ secrets.NOTIFICATIONS_CHAT_ID }}
@@ -173,7 +179,7 @@ jobs:
           CODE_NAME=$((grep -w 'codeName' | cut -d= -f2) < ballerina-distribution/gradle.properties)
           RELEASE_VERSION=$DIST_VERSION-$CODE_NAME
           echo "::set-output name=version::$RELEASE_VERSION"
-          echo "::set-output name=sversion::$SHORT_VERSION"
+          echo "::set-output name=sVersion::$SHORT_VERSION"
       - name: Archive Ballerina ZIP
         uses: actions/upload-artifact@v2
         with:
@@ -226,7 +232,7 @@ jobs:
           FILE="failed_modules.txt"
 
           while read module; do
-          python3 dependabot/notify_full_build_failure.py $module 2201.5.x;
+          python3 dependabot/notify_full_build_failure.py $module $PATCH_LEVEL;
           done < ${FILE}
         env:
           CHAT_ID: ${{ secrets.NOTIFICATIONS_CHAT_ID }}
@@ -236,9 +242,10 @@ jobs:
           BALLERINA_BOT_TOKEN: ${{ secrets.BALLERINA_BOT_TOKEN }}
     outputs:
       project-version: ${{ steps.project-version.outputs.version }}
+      short-version: ${{ steps.project-version.outputs.sVersion }}
 
   ubuntu-rpm-installer-test:
-    needs: build-distribution
+    needs: [build-lang, build-distribution]
     name: Ubuntu rpm Installer
     runs-on: ubuntu-latest
     container: centos:latest
@@ -264,13 +271,21 @@ jobs:
         run: |
           git clone https://github.com/ballerina-platform/ballerina-distribution.git
           cd ballerina-distribution
-          git checkout 2201.5.x
+          git checkout $PATCH_LEVEL
       - name: Download Ballerina rpm Installer
         uses: actions/download-artifact@v2
         with:
           name: Linux Installer rpm
       - name: Install Ballerina RPM
         run: rpm -ivh ballerina-*-linux-x64.rpm
+      - name: Update Configs
+        run: |
+          DISPLAY_TEXT=${{ needs.build-distribution.outputs.short-version }}
+          SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
+          SPEC_VERSION=${{ needs.build-lang.outputs.spec-version }}
+          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-distribution/ballerina-test-automation/gradle.properties
+          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-distribution/ballerina-test-automation/gradle.properties
+          perl -pi -e "s/^\s*swan-lake-latest-spec-version=.*/swan-lake-latest-spec-version=$SPEC_VERSION/" ballerina-distribution/ballerina-test-automation/gradle.properties
       - name: Run Installer Tests
         working-directory: ./ballerina-distribution/ballerina-test-automation/installer-test
         run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
@@ -278,7 +293,7 @@ jobs:
           TEST_MODE_ACTIVE: true
 
   macos-installer-build:
-    needs: build-distribution
+    needs: [build-lang, build-distribution]
     name: Build MacOS Installer
     runs-on: macos-latest
     steps:
@@ -293,7 +308,7 @@ jobs:
         run: |
           git clone https://github.com/ballerina-platform/ballerina-distribution.git
           cd ballerina-distribution
-          git checkout 2201.5.x
+          git checkout $PATCH_LEVEL
       - name: Download MacOS Intaller Zip
         uses: actions/download-artifact@v2
         with:
@@ -309,6 +324,14 @@ jobs:
           path: ballerina-distribution/installers/mac/target/pkg/ballerina-*-macos-x64.pkg
       - name: Install Ballerina PKG
         run: sudo installer -pkg ballerina-distribution/installers/mac/target/pkg/ballerina-*-macos-x64.pkg -target /
+      - name: Update Configs
+        run: |
+          DISPLAY_TEXT=${{ needs.build-distribution.outputs.short-version }}
+          SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
+          SPEC_VERSION=${{ needs.build-lang.outputs.spec-version }}
+          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-distribution/ballerina-test-automation/gradle.properties
+          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-distribution/ballerina-test-automation/gradle.properties
+          perl -pi -e "s/^\s*swan-lake-latest-spec-version=.*/swan-lake-latest-spec-version=$SPEC_VERSION/" ballerina-distribution/ballerina-test-automation/gradle.properties
       - name: Run Installer Tests
         working-directory: ./ballerina-distribution/ballerina-test-automation/installer-test
         run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
@@ -316,7 +339,7 @@ jobs:
           TEST_MODE_ACTIVE: true
 
   windows-installer-build:
-    needs: build-distribution
+    needs: [build-lang, build-distribution]
     name: Build Windows Installer
     runs-on: windows-latest
     steps:
@@ -336,7 +359,7 @@ jobs:
         run: |
           git clone https://github.com/ballerina-platform/ballerina-distribution.git
           cd ballerina-distribution
-          git checkout 2201.5.x
+          git checkout $PATCH_LEVEL
       - name: Download Windows Intaller Zip
         uses: actions/download-artifact@v2
         with:
@@ -357,6 +380,14 @@ jobs:
       - name: Install Ballerina msi
         run: msiexec /i w\target\msi\ballerina-${{ needs.build-distribution.outputs.project-version }}-windows-x64.msi /quiet /qr
         shell: cmd
+      - name: Update Configs
+        run: |
+          DISPLAY_TEXT=${{ needs.build-distribution.outputs.short-version }}
+          SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
+          SPEC_VERSION=${{ needs.build-lang.outputs.spec-version }}
+          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-distribution/ballerina-test-automation/gradle.properties
+          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-distribution/ballerina-test-automation/gradle.properties
+          perl -pi -e "s/^\s*swan-lake-latest-spec-version=.*/swan-lake-latest-spec-version=$SPEC_VERSION/" ballerina-distribution/ballerina-test-automation/gradle.properties
       - name: Run Installer Tests
         working-directory: .\ballerina-distribution\ballerina-test-automation\installer-test
         run: |
@@ -399,7 +430,7 @@ jobs:
       - name: Notify Build Failure
         if: ${{ failure() }}
         shell: bash
-        run: python3 dependabot/notify_full_build_failure.py nballerina 2201.5.x
+        run: python3 dependabot/notify_full_build_failure.py nballerina $PATCH_LEVEL
         env:
           CHAT_ID: ${{ secrets.NOTIFICATIONS_CHAT_ID }}
           CHAT_KEY: ${{ secrets.NOTIFICATIONS_CHAT_KEY }}
