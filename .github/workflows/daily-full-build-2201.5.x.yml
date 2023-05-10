@@ -174,9 +174,9 @@ jobs:
       - name: Get project version
         id: project-version
         run: |
-          SHORT_VERSION=$((grep -w "version" | cut -d= -f2 | cut -d- -f1) < ballerina-distribution/gradle.properties)
-          DIST_VERSION=$((grep -w "version" | cut -d= -f2) < ballerina-distribution/gradle.properties)
-          CODE_NAME=$((grep -w 'codeName' | cut -d= -f2) < ballerina-distribution/gradle.properties)
+          SHORT_VERSION=$((grep -w "version" | cut -d= -f2 | cut -d- -f1 | xargs) < ballerina-distribution/gradle.properties)
+          DIST_VERSION=$((grep -w "version" | cut -d= -f2 | xargs) < ballerina-distribution/gradle.properties)
+          CODE_NAME=$((grep -w 'codeName' | cut -d= -f2 | xargs) < ballerina-distribution/gradle.properties)
           RELEASE_VERSION=$DIST_VERSION-$CODE_NAME
           echo "::set-output name=version::$RELEASE_VERSION"
           echo "::set-output name=sVersion::$SHORT_VERSION"
