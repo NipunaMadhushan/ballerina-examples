@@ -15,9 +15,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '2.1.x'
       - name: Download Ballerina Distribution
         run: |
           git clone https://github.com/ballerina-platform/ballerina-distribution.git
@@ -33,9 +30,9 @@ jobs:
         shell: cmd
       - name: Update Installer Test Configs
         run: |
-          set DISPLAY_TEXT="2201.4.2"
-          set SWAN_LAKE_LATEST_VERSION="swan-lake-$DISPLAY_TEXT"
-          set SPEC_VERSION="2022R4"
+          DISPLAY_TEXT="2201.4.2"
+          SWAN_LAKE_LATEST_VERSION="swan-lake-$DISPLAY_TEXT"
+          SPEC_VERSION="2022R4"
           perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-distribution/ballerina-test-automation/gradle.properties
           perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-distribution/ballerina-test-automation/gradle.properties
           perl -pi -e "s/^\s*swan-lake-latest-spec-version=.*/swan-lake-latest-spec-version=$SPEC_VERSION/" ballerina-distribution/ballerina-test-automation/gradle.properties
