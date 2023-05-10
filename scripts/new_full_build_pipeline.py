@@ -140,6 +140,12 @@ def main():
         keep_local_changes = True
     else:
         print_info("Updating all the repositories. Any local change will be overridden")
+    
+    if args.skip_tests:
+        print_info("Skipping tests for downstream modules")
+        skip_tests = True
+        commands.append("-x")
+        commands.append("test")
 
     if args.lang_version:
         print_info("Using ballerina lang version: " + args.lang_version)
@@ -155,16 +161,13 @@ def main():
 
         lang_version = get_version()
         print_info(f"Lang version: {lang_version}")
-        lang_build_commands = ["./gradlew", "clean", "build", "-x", "test", "-x", "check", "--scan", "--stacktrace",
+        lang_build_commands = ["./gradlew", "clean", "build", "--scan", "--stacktrace",
                                "publishToMavenLocal"]
+        if skip_tests:
+            lang_build_commands.append("-x")
+            lang_build_commands.append("test")
         build_module(BALLERINA_LANG_REPO_NAME, lang_build_commands)
         os.chdir("..")
-
-    if args.skip_tests:
-        print_info("Skipping tests for downstream modules")
-        skip_tests = True
-        commands.append("-x")
-        commands.append("test")
 
     if args.update_stdlib_dependencies:
         print_info("Using local SNAPSHOT builds for upper level stdlib dependencies")
