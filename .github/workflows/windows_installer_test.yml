@@ -25,24 +25,11 @@ jobs:
           git checkout 2201.5.x
       - name: Install Wget
         run: choco install wget --no-progress
-      - name: Download Windows Intaller Zip
+      - name: Download Windows Intaller
         run: |
           wget https://dist.ballerina.io/downloads/2201.4.2/ballerina-2201.4.2-swan-lake-windows-x64.msi
-      - name: Create windows-msi
-        id: run_installers_msi
-        run: |
-          $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
-          move ballerina-distribution\installers\windows .\
-          ren windows w
-          cd w
-          .\build-ballerina-windows-x64.bat --version ${{ needs.build-distribution.outputs.project-version }} --path .\..\
-      - name: Archive Windows msi
-        uses: actions/upload-artifact@v2
-        with:
-          name: Windows Installer msi
-          path: w\target\msi\ballerina-*-windows-x64.msi
       - name: Install Ballerina msi
-        run: msiexec /i w\target\msi\ballerina-${{ needs.build-distribution.outputs.project-version }}-windows-x64.msi /quiet /qr
+        run: msiexec /i ballerina-2201.4.2-swan-lake-windows-x64.msi /quiet /qr
         shell: cmd
       - name: Update Installer Test Configs
         run: |
