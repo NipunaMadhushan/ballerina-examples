@@ -107,7 +107,7 @@ jobs:
       - name: Build Standard Libraries & Tools
         run: |
           python -u scripts/new_full_build_pipeline.py ./ --lang-version ${{ needs.build-lang.outputs.lang-version }} \
-          --build-released-versions --patch-level $PATCH_LEVEL --skip-build-distribution --continue-on-error --skip-tests
+          --build-released-versions --patch-level $PATCH_LEVEL --skip-build-distribution --continue-on-error
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
