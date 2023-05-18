@@ -36,7 +36,7 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
       - name: Build ballerina-lang
-        run: python -u dependabot/full_build_pipeline.py ./ --lang-branch $PATCH_LEVEL --build-level 0 --skip-tests
+        run: python -u scripts/full_build_pipeline.py ./ --lang-branch $PATCH_LEVEL --build-level 0 --skip-tests
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
           packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
@@ -109,7 +109,7 @@ jobs:
           path: ~/.m2/
       - name: Build Standard Libraries & Tools
         run: |
-          python -u dependabot/full_build_pipeline.py ./ --lang-version ${{ needs.build-lang.outputs.lang-version }} \
+          python -u scripts/full_build_pipeline.py ./ --lang-version ${{ needs.build-lang.outputs.lang-version }} \
           --build-released-versions --patch-level $PATCH_LEVEL --skip-build-distribution --continue-on-error --skip-tests
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
@@ -165,7 +165,7 @@ jobs:
           path: ~/.m2/
       - name: Build ballerina-distribution
         run: |
-          python -u dependabot/full_build_pipeline.py ./ --lang-version ${{ needs.build-lang.outputs.lang-version }} \
+          python -u scripts/full_build_pipeline.py ./ --lang-version ${{ needs.build-lang.outputs.lang-version }} \
           --patch-level $PATCH_LEVEL --build-level $DISTRIBUTION_BUILD_LEVEL --continue-on-error --skip-tests
         env:
           packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
@@ -241,7 +241,7 @@ jobs:
           FILE="failed_modules.txt"
 
           while read module; do
-          python3 dependabot/notify_full_build_failure.py $module $PATCH_LEVEL;
+          python3 scripts/notify_full_build_failure.py $module $PATCH_LEVEL;
           done < ${FILE}
         env:
           CHAT_ID: ${{ secrets.NOTIFICATIONS_CHAT_ID }}
@@ -440,7 +440,7 @@ jobs:
       - name: Notify Build Failure
         if: ${{ failure() }}
         shell: bash
-        run: python3 dependabot/notify_full_build_failure.py nballerina $PATCH_LEVEL
+        run: python3 scripts/notify_full_build_failure.py nballerina $PATCH_LEVEL
         env:
           CHAT_ID: ${{ secrets.NOTIFICATIONS_CHAT_ID }}
           CHAT_KEY: ${{ secrets.NOTIFICATIONS_CHAT_KEY }}
