@@ -22,7 +22,7 @@ jobs:
         run: |
           git clone https://github.com/ballerina-platform/ballerina-distribution.git
           cd ballerina-distribution
-          git checkout %PATCH_LEVEL%
+          git checkout $PATCH_LEVEL
       - name: Install Wget
         run: choco install wget --no-progress
       - name: Download Windows Intaller
