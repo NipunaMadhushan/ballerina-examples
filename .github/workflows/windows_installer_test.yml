@@ -3,6 +3,9 @@ name: Windows Installer Test
 on:
   workflow_dispatch:
 
+env:
+  PATCH_LEVEL: 2201.5.x
+
 jobs:
   windows-installer-build:
     name: Build Windows Installer
@@ -19,7 +22,7 @@ jobs:
         run: |
           git clone https://github.com/ballerina-platform/ballerina-distribution.git
           cd ballerina-distribution
-          git checkout 2201.5.x
+          git checkout %PATCH_LEVEL%
       - name: Install Wget
         run: choco install wget --no-progress
       - name: Download Windows Intaller
