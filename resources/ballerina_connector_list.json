@@ -1,5 +1,5 @@
 {
-  "ballerinax-connectors": [
+  "ballerinax_connectors": [
     {
       "name": "module-ballerinax-github",
       "org": "ballerina-platform",
