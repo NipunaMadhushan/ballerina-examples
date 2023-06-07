@@ -22,15 +22,15 @@ jobs:
   #        distribution: 'temurin'
   #        java-version: '11'
 
-      - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action/@nightly
+      - name: Ballerina Init
+        uses: ballerina-platform/ballerina-action/@${{ github.event.inputs.version }}
         with:
           args: init
         env:
           WORKING_DIR: examples/alternate-wait
 
       - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action/@nightly
+        uses: ballerina-platform/ballerina-action/@${{ github.event.inputs.version }}
         with:
           args: build
         env:
