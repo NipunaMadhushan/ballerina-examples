@@ -25,6 +25,13 @@ jobs:
       - name: Ballerina Build
         uses: ballerina-platform/ballerina-action/@nightly
         with:
+          args: init
+        env:
+          WORKING_DIR: examples/alternate-wait
+
+      - name: Ballerina Build
+        uses: ballerina-platform/ballerina-action/@nightly
+        with:
           args: build
         env:
           WORKING_DIR: examples/alternate-wait
