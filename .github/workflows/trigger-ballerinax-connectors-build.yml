@@ -11,7 +11,7 @@ jobs:
       - name: Get extended library names
         id: set-matrix
         run: |
-            curl https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/ballerina_connector_list.json | jq '.ballerinax-connectors | .[] | {name}' > modules.txt
+            curl https://raw.githubusercontent.com/NipunaMadhushan/ballerina-examples/master/resources/ballerina_connector_list.json | jq '.ballerinax-connectors | .[] | {name}' > modules.txt
             cat modules.txt | jq -s '.' | sed "s: ::g" | tr -d '\n' > processed.txt
             echo "::set-output name=matrix::{\"include\":$(cat processed.txt)}"
     outputs:
