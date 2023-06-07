@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{fromJSON(needs.get_extended_library_list.outputs.matrix)}}
+      matrix: ${{fromJSON(needs.get_connector_list.outputs.matrix)}}
     steps:
       - name: Echo name
         run: |
