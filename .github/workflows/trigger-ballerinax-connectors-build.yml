@@ -1,0 +1,55 @@
+name: Trigger ballerinax connectors build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  get_connector_list:
+    name: Get connector repository names
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get extended library names
+        id: set-matrix
+        run: |
+            curl https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/ballerina_connector_list.json | jq '.ballerinax-connectors | .[] | {name}' > modules.txt
+            cat modules.txt | jq -s '.' | sed "s: ::g" | tr -d '\n' > processed.txt
+            echo "::set-output name=matrix::{\"include\":$(cat processed.txt)}"
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  trigger_repository_disptach_in_connectors:
+    name: Trigger repository dispatch in ballerinax connector repos
+    needs: get_connector_list
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJSON(needs.get_extended_library_list.outputs.matrix)}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo name
+        run: |
+          echo ${{matrix.name}}
+
+  get_extended_library_list:
+    name: Get extended library repository names
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get extended library names
+        id: set-matrix
+        run: |
+            curl https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/extensions.json | jq '.extended_library | .[] | {name}' > modules.txt
+            cat modules.txt | jq -s '.' | sed "s: ::g" | tr -d '\n' > processed.txt
+            echo "::set-output name=matrix::{\"include\":$(cat processed.txt)}"
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    
+  trigger_repository_disptach_in_extended_library_modules:
+    name: Trigger repository dispatch in extended standard library repos
+    needs: get_extended_library_list
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJSON(needs.get_extended_library_list.outputs.matrix)}}
+    steps:
+      - name : Echo name
+        run: |
+          echo ${{matrix.name}}
