@@ -20,10 +20,10 @@ jobs:
   trigger_repository_disptach_in_connectors:
     name: Trigger repository dispatch in ballerinax connector repos
     needs: get_connector_list
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix: ${{fromJSON(needs.get_extended_library_list.outputs.matrix)}}
-    runs-on: ubuntu-latest
     steps:
       - name: Echo name
         run: |
