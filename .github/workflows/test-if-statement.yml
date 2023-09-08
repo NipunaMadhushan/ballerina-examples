@@ -62,7 +62,7 @@ jobs:
           else
             update_version="$(cut -d'.' -f2 <<<"$patch_level")" &&
             update_version=$((update_version)) &&
-            if [[ $update_version -ge 8]]; then JAVA_VERSION="17"; else JAVA_VERSION="11"; fi;
+            if [[ $update_version -ge 8]]; then JAVA_VERSION="17"; else JAVA_VERSION="11"; fi
           fi;
 
           echo $JAVA_VERSION
