@@ -1,0 +1,67 @@
+name: Test If Statement
+
+on:
+  workflow_dispatch:
+    inputs:
+      lang_branch:
+        description: 'ballerina-lang branch'
+        required: true
+        default: 'master'
+      lang_version:
+        description: 'ballerina-lang version [OPTIONAL] (This will use the version instead of a branch)'
+        required: false
+      patch_level:
+        type: choice
+        description: 'Patch Level (e.g.; 2201.4.x, 2201.3.x, master)'
+        required: true
+        options:
+          - 'master'
+          - '2201.8.x'
+          - '2201.7.x'
+          - '2201.6.x'
+          - '2201.5.x'
+          - '2201.4.x'
+          - '2201.3.x'
+        default: 'master'
+      downstream_branch:
+        description: 'downstream repo branch [OPTIONAL]'
+        required: false
+      skip_tests:
+        type: boolean
+        description: 'Skip tests'
+        deprecationMessage: 'true or false'
+        required: true
+      update_stdlib_dependencies:
+        type: boolean
+        description: 'Update stdlib dependencies'
+        deprecationMessage: 'true or false'
+        required: true
+      build_released_versions:
+        type: boolean
+        description: 'Build released standard library versions'
+        deprecationMessage: 'true or false'
+        required: true
+
+env:
+  DISTRIBUTION_BUILD_LEVEL: 11
+
+jobs:
+  build-lang:
+    name: Build ballerina-lang
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up JDK 17.0.7
+        if: ${{ github.event.inputs.patch_level == 'master' || github.event.inputs.patch_level == '2201.[7-8]+.x' }}
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17.0.7'
+      - name: Set up JDK 11
+        if: ${{ github.event.inputs.patch_level == '2201.[0-6]+.x' }}
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
