@@ -60,6 +60,8 @@ jobs:
             JAVA_VERSION="17";
           else
             patch_level=${{ github.event.inputs.patch_level }} &&
+            A="$(cut -d'.' -f2 <<<"$s")" && 
+            echo $A &&
             echo "${patch_level#*.}";
           fi;
       - name: Set up JDK 17.0.7
