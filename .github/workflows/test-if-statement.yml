@@ -67,7 +67,7 @@ jobs:
             else
               JAVA_VERSION="11";
             fi;
-          fi;
+          fi
           
           echo $JAVA_VERSION
       - name: Set up JDK 17.0.7
