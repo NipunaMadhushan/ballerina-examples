@@ -61,7 +61,7 @@ jobs:
           else
             patch_level=${{ github.event.inputs.patch_level }} &&
             update_version="$(cut -d'.' -f2 <<<"$patch_level")" && 
-            update_version=$((update_version))
+            update_version=$((update_version)) &&
             if [[ $update_version -ge 8]]; then
               JAVA_VERSION="17";
             else
