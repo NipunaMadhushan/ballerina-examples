@@ -62,8 +62,14 @@ jobs:
             patch_level=${{ github.event.inputs.patch_level }} &&
             update_version="$(cut -d'.' -f2 <<<"$patch_level")" && 
             update_version=$((update_version))
-            echo $update_version
+            if [[ $update_version -ge 8]]; then
+              JAVA_VERSION="17";
+            else
+              JAVA_VERSION="11";
+            fi;
           fi;
+          
+          echo $JAVA_VERSION
       - name: Set up JDK 17.0.7
         if: ${{ github.event.inputs.patch_level == 'master' }}
         uses: actions/setup-java@v2
