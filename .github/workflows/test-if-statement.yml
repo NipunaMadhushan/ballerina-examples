@@ -53,6 +53,15 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+      - name: Get Java Verison
+        run: |
+          JAVA_VERSION=""
+          if [[ "${{ github.event.inputs.patch_level }}" == "master" ]]; then
+            JAVA_VERSION="17";
+          else
+            patch_level=${{ github.event.inputs.patch_level }} &&
+            echo "${patch_level##*.}";
+          fi;
       - name: Set up JDK 17.0.7
         if: ${{ github.event.inputs.patch_level == 'master' || github.event.inputs.patch_level == '2201.[7-8]+.x' }}
         uses: actions/setup-java@v2
