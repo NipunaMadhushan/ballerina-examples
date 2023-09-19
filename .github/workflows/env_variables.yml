@@ -32,7 +32,7 @@ jobs:
           echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
           echo "GITHUB_REF_PROTECTED: $GITHUB_REF_PROTECTED"
           echo "GITHUB_REF_TYPE: $GITHUB_REF_TYPE"
-          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_REPOSITORY: ${{ github.event.repository }}"
           echo "GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}"
           echo "GITHUB_REPOSITORY_OWNER: $GITHUB_REPOSITORY_OWNER"
           echo "GITHUB_RETENTION_DAYS: $GITHUB_RETENTION_DAYS"
