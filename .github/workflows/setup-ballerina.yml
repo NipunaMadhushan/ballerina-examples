@@ -8,7 +8,6 @@ env:
 
 jobs:
   build:
-    if: github.repository_owner == 'ballerina-platform'
     runs-on: ubuntu-latest
 
     steps:
