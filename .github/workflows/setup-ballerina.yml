@@ -2,6 +2,11 @@ name: Set Up Ballerina
 
 on:
   workflow_dispatch:
+    inputs:
+      ballerin_version: 
+        description: 'Ballerina version'
+        required: true
+        default: '2201.8.3'
 
 env:
   BALLERINA_DISTRIBUTION_VERSION: 2201.8.3    # Update this with the latest Ballerina version
@@ -20,6 +25,6 @@ jobs:
       - name: Set up Ballerina
         uses: ballerina-platform/setup-ballerina@v1.1.0
         with:
-          version: ${{ env.BALLERINA_DISTRIBUTION_VERSION }}
+          version: ${{ github.event.inputs.ballerin_version }}
       - name: Check Ballerina Version
         run: bal -v
