@@ -28,8 +28,8 @@ jobs:
           dotnet-version: '2.1.x'
       - name: Install GUID Generator
         run: dotnet tool install -g dotnet-guid --version 0.5.2
-      - name: Install Wget
-        run: choco install wget --no-progress
+      # - name: Install Wget
+      #   run: choco install wget --no-progress
       # - name: Download Windows Intaller Zip
       #   run: |
       #     wget https://github.com/ballerina-platform/ballerina-distribution/releases/download/v${{ github.event.inputs.release_version }}/ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
