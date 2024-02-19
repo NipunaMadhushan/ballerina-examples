@@ -35,7 +35,8 @@ jobs:
       #     wget https://github.com/ballerina-platform/ballerina-distribution/releases/download/v${{ github.event.inputs.release_version }}/ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
       - name: Download Windows Intaller Zip
         run: |
-          curl -O https://github.com/ballerina-platform/ballerina-distribution/releases/download/v${{ github.event.inputs.release_version }}/ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
+          echo default login NipunaMadhushan password ${{ secrets.BALLERINA_BOT_TOKEN }} >> _netrc
+          curl --netrc-file _netrc -L -o ballerina-dist.zip https://github.com/ballerina-platform/ballerina-distribution/releases/download/v${{ github.event.inputs.release_version }}/ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
       - name: Check Files
         run: dir/s
         shell: cmd
