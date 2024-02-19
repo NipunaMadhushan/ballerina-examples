@@ -36,6 +36,8 @@ jobs:
       - name: Download Windows Intaller Zip
         run: |
           curl -O https://github.com/ballerina-platform/ballerina-distribution/releases/download/v${{ github.event.inputs.release_version }}/ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
+      - name: Check Files
+        run: ls -lrt
       - name: Create windows-msi
         id: run_installers_msi
         run: |
