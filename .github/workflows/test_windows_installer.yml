@@ -5,11 +5,11 @@ on:
       release_version:
         description: 'Ballerina release version'
         required: true
-        default: '2201.3.0-rc1'
+        default: '2201.8.5'
       short_version:
         description: 'Ballerina short version'
         required: true
-        default: '2201.3.0'
+        default: '2201.8.5'
 
 jobs:
   windows-installer-build:
