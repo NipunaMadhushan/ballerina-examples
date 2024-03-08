@@ -36,10 +36,15 @@ jobs:
       - name: Download Windows Intaller Zip
         run: |
           echo default login NipunaMadhushan password ${{ secrets.BALLERINA_BOT_TOKEN }} >> _netrc
-          curl --netrc-file _netrc -L -o ballerina-${{ github.event.inputs.release_version }}-swan-lake-windows.zip https://github.com/ballerina-platform/ballerina-distribution/releases/download/v${{ github.event.inputs.release_version }}/ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
+          curl --netrc-file _netrc -L -o ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip https://github.com/ballerina-platform/ballerina-distribution/releases/download/v${{ github.event.inputs.release_version }}/ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
       - name: Check Files
         run: dir/b
         shell: cmd
+      - name: Archive Ballerina Windows Zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: Ballerina Windows Zip
+          path: ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
       - name: Create windows-msi
         id: run_installers_msi
         run: |
@@ -56,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Windows msi Hashes
-          path: ballerina-${{ needs.ubuntu-build.outputs.project-version }}-swan-lake-windows-x64.msi.sha256
+          path: ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows-x64.msi.sha256
       - name: Archive Windows msi
         uses: actions/upload-artifact@v2
         with:
