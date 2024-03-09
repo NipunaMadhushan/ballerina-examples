@@ -31,10 +31,9 @@ jobs:
       # - name: Set up Wix Tool Kit
       #   run: $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
       #   shell: cmd
-      - name: Set up WiX Toolset
-        uses: wix/setup-wix@v2
-        with:
-          wix-version: '3.11' # Specify the version you need
+      - name: Set path for candle and light
+        run: echo "C:\Program Files (x86)\WiX Toolset v3.11\bin" >> $GITHUB_PATH
+        shell: bash
       # - name: Install Wget
       #   run: choco install wget --no-progress
       # - name: Download Windows Intaller Zip
