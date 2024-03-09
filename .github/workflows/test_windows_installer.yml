@@ -28,8 +28,9 @@ jobs:
           dotnet-version: '2.1.x'
       - name: Install GUID Generator
         run: dotnet tool install -g dotnet-guid --version 0.5.2
-      # - name: Set Wix Tool Kit
-      #   run: $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
+      - name: Set Wix Tool Kit
+        run: $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
+        shell: cmd
       # - name: Install Wget
       #   run: choco install wget --no-progress
       # - name: Download Windows Intaller Zip
@@ -50,7 +51,6 @@ jobs:
       - name: Create windows-msi
         id: run_installers_msi
         run: |
-          $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
           move installers\windows .\
           ren windows w
           cd w
