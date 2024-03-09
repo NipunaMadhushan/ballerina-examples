@@ -28,6 +28,8 @@ jobs:
           dotnet-version: '2.1.x'
       - name: Install GUID Generator
         run: dotnet tool install -g dotnet-guid --version 0.5.2
+      # - name: Set Wix Tool Kit
+      #   run: $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
       # - name: Install Wget
       #   run: choco install wget --no-progress
       # - name: Download Windows Intaller Zip
@@ -54,6 +56,7 @@ jobs:
           cd w
           .\build-ballerina-windows-x64.bat --version ${{ github.event.inputs.short_version }}-swan-lake --path .\..\
           echo "Created windows-msi successfully"
+        shell: cmd
       - name: Generate Hashes
         run: |
           openssl dgst -sha256 -out ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows-x64.msi.sha256 w\target\msi\ballerina-*-windows-x64.msi
