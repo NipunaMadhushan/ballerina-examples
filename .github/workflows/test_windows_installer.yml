@@ -31,9 +31,9 @@ jobs:
       # - name: Set up Wix Tool Kit
       #   run: $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
       #   shell: cmd
-      - name: Set path for candle and light
-        run: echo "C:\Program Files (x86)\WiX Toolset v3.11\bin" >> $GITHUB_PATH
-        shell: bash
+      # - name: Set path for candle and light
+      #   run: echo "C:\Program Files (x86)\WiX Toolset v3.11\bin" >> $GITHUB_PATH
+      #   shell: bash
       # - name: Install Wget
       #   run: choco install wget --no-progress
       # - name: Download Windows Intaller Zip
@@ -54,12 +54,12 @@ jobs:
       - name: Create windows-msi
         id: run_installers_msi
         run: |
+          echo "C:\Program Files (x86)\WiX Toolset v3.11\bin" >> $GITHUB_PATH
           move installers\windows .\
           ren windows w
           cd w
           .\build-ballerina-windows-x64.bat --version ${{ github.event.inputs.short_version }}-swan-lake --path .\..\
           echo "Created windows-msi successfully"
-        shell: bash
       - name: Generate Hashes
         run: |
           openssl dgst -sha256 -out ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows-x64.msi.sha256 w\target\msi\ballerina-*-windows-x64.msi
