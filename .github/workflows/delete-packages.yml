@@ -1,0 +1,20 @@
+name: Delete Packages (Lang)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  delete-packages:
+    name: Delete Packages in Lang
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Delete packages
+        run: |
+          for package in $(jq -r '.[] | .package' published-packages.json); do \
+          echo “Package Name: $package"; \
+          done
+
