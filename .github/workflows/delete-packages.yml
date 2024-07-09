@@ -14,7 +14,8 @@ jobs:
 
       - name: Delete packages
         run: |
-          for package in $(jq -r '.[] | .package' published-packages.json); \
+          package_list=$(jq -r '.[] | .package' published-packages.json)
+          for package in $package_list; \
           do echo “Package Name: $package"; \
           done
 
