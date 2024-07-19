@@ -71,7 +71,7 @@ jobs:
           set -x
           if [[ $OSTYPE == 'msys'* ]]; then
             echo "windows runner detected"
-            INSTALLER_PATH=$(dir .\ballerina-*-windows-x64.pkg)
+            INSTALLER_PATH=$(dir .\ballerina-*-windows-x64.msi)
             msiexec //i ballerina-${{ inputs.version }}-swan-lake-windows-x64.msi //qn
             echo "BALLERINA_HOME=C:\\Program Files\\Ballerina\\" >> $GITHUB_ENV
             powershell ${GITHUB_ACTION_PATH}/updatepath.ps1    
@@ -83,7 +83,7 @@ jobs:
             echo "/Library/Ballerina/bin" >> $GITHUB_PATH
           else
             echo "ubuntu runner detected" 
-            INSTALLER_PATH=$(ls ./ballerina-*-linux-x64.pkg)
+            INSTALLER_PATH=$(ls ./ballerina-*-linux-x64.deb)
             if [ "$(id --user)" -eq "0" ]; then
               sudocmd=""
             else
