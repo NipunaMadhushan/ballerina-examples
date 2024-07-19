@@ -42,25 +42,25 @@ jobs:
           elif [[ $OSTYPE == 'darwin'* ]]; then
             echo "macos runner detected"
             ARTIFACT_NAME="MacOS Installer pkg"
-            GITHUB_RUN_ID=$(wget -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" \
+            GITHUB_RUN_ID=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/ballerina-platform/ballerina-distribution/actions/workflows/$DAILY_BUILD_VERSION.yml/runs?status=success&per_page=1" | jq '.workflow_runs[0].id')
             echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
-            DOWNLOAD_URL=$(wget -H "Authorization: token $GITHUB_TOKEN" \
+            DOWNLOAD_URL=$(curl -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/ballerina-platform/ballerina-distribution/actions/runs/$GITHUB_RUN_ID/artifacts" | jq -r --arg name "$ARTIFACT_NAME" '.artifacts[] | select(.name == $name) | .archive_download_url')
             echo "DOWNLOAD_URL=$DOWNLOAD_URL"
-            wget -H "Authorization: token $GITHUB_TOKEN" \
+            curl -H "Authorization: token $GITHUB_TOKEN" \
             -L -o artifact.zip $DOWNLOAD_URL
             unzip -q artifact.zip
           else
             echo "ubuntu runner detected"
             ARTIFACT_NAME="Linux Installer deb"
-            GITHUB_RUN_ID=$(wget -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" \
+            GITHUB_RUN_ID=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/ballerina-platform/ballerina-distribution/actions/workflows/$DAILY_BUILD_VERSION.yml/runs?status=success&per_page=1" | jq '.workflow_runs[0].id')
-            DOWNLOAD_URL=$(wget -H "Authorization: token $GITHUB_TOKEN" \
+            DOWNLOAD_URL=$(curl -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/ballerina-platform/ballerina-distribution/actions/runs/$GITHUB_RUN_ID/artifacts" | jq -r --arg name "$ARTIFACT_NAME" '.artifacts[] | select(.name == $name) | .archive_download_url')
-            wget -H "Authorization: token $GITHUB_TOKEN" \
+            curl -H "Authorization: token $GITHUB_TOKEN" \
             -L -o artifact.zip $DOWNLOAD_URL
             unzip -q artifact.zip
           fi
