@@ -16,10 +16,11 @@ on:
 jobs:
   install-archived-installer:
     name: Install Archived Installers
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: macos-latest
+    #    runs-on: ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Get Installer Download URL
         id: get-installer-url
