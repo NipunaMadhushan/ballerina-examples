@@ -51,8 +51,7 @@ jobs:
             echo "DOWNLOAD_URL=$DOWNLOAD_URL"
             curl -H "Authorization: token $GITHUB_TOKEN" \
             -L -o artifact.zip $DOWNLOAD_URL
-            unzip -q artifact.zip
-            ls 
+            unzip -q artifact.zip 
           else
             echo "ubuntu runner detected"
             ARTIFACT_NAME="Linux Installer deb"
@@ -64,7 +63,6 @@ jobs:
             curl -H "Authorization: token $GITHUB_TOKEN" \
             -L -o artifact.zip $DOWNLOAD_URL
             unzip -q artifact.zip
-            ls
           fi
         shell: bash
         env:
@@ -75,22 +73,25 @@ jobs:
           set -x
           if [[ $OSTYPE == 'msys'* ]]; then
             echo "windows runner detected"
+            INSTALLER_PATH=$(dir .\ballerina-*-macos-arm-x64.pkg)
             msiexec //i ballerina-${{ inputs.version }}-swan-lake-windows-x64.msi //qn
             echo "BALLERINA_HOME=C:\\Program Files\\Ballerina\\" >> $GITHUB_ENV
             powershell ${GITHUB_ACTION_PATH}/updatepath.ps1    
           elif [[ $OSTYPE == 'darwin'* ]]; then
             echo "macos runner detected"
-            sudo installer -pkg ballerina-${{ steps.configure-version.outputs.version }}-swan-lake-macos-x64.pkg -target /Library
+            INSTALLER_PATH=$(ls ./ballerina-*-macos-arm-x64.pkg)
+            sudo installer -pkg $INSTALLER_PATH -target /Library
             echo "BALLERINA_HOME=/Library/Ballerina" >> $GITHUB_ENV
             echo "/Library/Ballerina/bin" >> $GITHUB_PATH
           else
             echo "ubuntu runner detected" 
+            INSTALLER_PATH=$(ls ./ballerina-*-macos-arm-x64.pkg)
             if [ "$(id --user)" -eq "0" ]; then
               sudocmd=""
             else
               sudocmd="sudo"
             fi
-            $sudocmd dpkg -i "ballerina-${{ steps.configure-version.outputs.version }}-swan-lake-linux-x64.deb"
+            $sudocmd dpkg -i $INSTALLER_PATH
             echo "BALLERINA_HOME=/usr/lib/ballerina" >> $GITHUB_ENV
             echo "/usr/lib/ballerina/bin" >> $GITHUB_PATH
           fi
