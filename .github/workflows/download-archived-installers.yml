@@ -11,7 +11,7 @@ on:
           - 'nightly-2201.9.x'
           - 'nightly-2201.8.x'
           - 'nightly-2201.7.x'
-        default: 'nightly'
+        default: 'nightly-2201.9.x'
 
 jobs:
   install-archived-installer:
@@ -26,6 +26,7 @@ jobs:
         run: |
           BALLERINA_VERSION=${{ github.event.inputs.ballerina-version }}
           DAILY_BUILD_VERSION=${BALLERINA_VERSION//nightly/daily-build}
+          echo "DAILY_BUILD_VERSION=$DAILY_BUILD_VERSION"
           
           if [[ $OSTYPE == 'msys'* ]]; then
             echo "windows runner detected"
@@ -43,9 +44,11 @@ jobs:
             ARTIFACT_NAME="MacOS Installer pkg"
             GITHUB_RUN_ID=$(wget -H "Authorization: token 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" -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/ballerina-platform/ballerina-distribution/actions/workflows/$DAILY_BUILD_VERSION.yml/runs?status=success&per_page=1" | jq '.workflow_runs[0].id')
+            echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
             DOWNLOAD_URL=$(wget -H "Authorization: token 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" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/ballerina-platform/ballerina-distribution/actions/runs/$GITHUB_RUN_ID/artifacts" | jq -r --arg name "$ARTIFACT_NAME" '.artifacts[] | select(.name == $name) | .archive_download_url')
+            echo "DOWNLOAD_URL=$DOWNLOAD_URL"
             wget -H "Authorization: token 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" \
             -L -o artifact.zip $DOWNLOAD_URL
             unzip -q artifact.zip
