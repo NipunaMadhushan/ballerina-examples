@@ -1,0 +1,18 @@
+name: Test Setup Ballerina
+
+on:
+  workflow_dispatch:
+
+jobs:
+  windows-installer-build:
+    name: Build Windows Installer
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Set up Ballerina
+        uses: ballerina-platform/setup-ballerina@v1
+        with:
+          version: 2201.9.2
+      - name: Verify Ballerina Version
+        run: bal version
