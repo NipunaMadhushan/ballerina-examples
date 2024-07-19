@@ -24,7 +24,7 @@ jobs:
       - name: Get Installer Download URL
         id: get-installer-url
         run: |
-          DAILY_BUILD_VERSION=echo ${${{ github.event.inputs.ballerina-version }}//nightly/daily-build}
+          DAILY_BUILD_VERSION=$(echo ${${{ github.event.inputs.ballerina-version }}//nightly/daily-build})
           
           if [[ $OSTYPE == 'msys'* ]]; then
             echo "windows runner detected"
