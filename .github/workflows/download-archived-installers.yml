@@ -72,7 +72,7 @@ jobs:
           if [[ $OSTYPE == 'msys'* ]]; then
             echo "windows runner detected"
             INSTALLER_PATH=$(dir .\ballerina-*-windows-x64.msi)
-            msiexec //i ballerina-${{ inputs.version }}-swan-lake-windows-x64.msi //qn
+            msiexec //i $INSTALLER_PATH //qn
             echo "BALLERINA_HOME=C:\\Program Files\\Ballerina\\" >> $GITHUB_ENV
             powershell ${GITHUB_ACTION_PATH}/updatepath.ps1    
           elif [[ $OSTYPE == 'darwin'* ]]; then
