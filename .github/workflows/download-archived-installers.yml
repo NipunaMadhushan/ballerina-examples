@@ -97,3 +97,6 @@ jobs:
             echo "/usr/lib/ballerina/bin" >> $GITHUB_PATH
           fi
         shell: bash
+
+      - name: Verify Installation
+        run: bal -v
