@@ -74,6 +74,7 @@ jobs:
             INSTALLER_PATH=$(dir ballerina-*-windows-x64.msi)
             msiexec //i $INSTALLER_PATH //qn
             echo "BALLERINA_HOME=C:\\Program Files\\Ballerina\\" >> $GITHUB_ENV
+            cmd $env:Path += ";C:\Program Files\Ballerina\bin"
           elif [[ $OSTYPE == 'darwin'* ]]; then
             echo "macos runner detected"
             INSTALLER_PATH=$(ls ./ballerina-*-macos-x64.pkg)
@@ -96,5 +97,4 @@ jobs:
 
       - name: Verify Installation
         run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
           bal -v
