@@ -52,6 +52,7 @@ jobs:
             curl -H "Authorization: token $GITHUB_TOKEN" \
             -L -o artifact.zip $DOWNLOAD_URL
             unzip -q artifact.zip
+            ls 
           else
             echo "ubuntu runner detected"
             ARTIFACT_NAME="Linux Installer deb"
@@ -63,6 +64,7 @@ jobs:
             curl -H "Authorization: token $GITHUB_TOKEN" \
             -L -o artifact.zip $DOWNLOAD_URL
             unzip -q artifact.zip
+            ls
           fi
         shell: bash
         env:
