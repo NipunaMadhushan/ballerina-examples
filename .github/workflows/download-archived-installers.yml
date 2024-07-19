@@ -71,7 +71,7 @@ jobs:
           set -x
           if [[ $OSTYPE == 'msys'* ]]; then
             echo "windows runner detected"
-            INSTALLER_PATH=$(dir ballerina-*-windows-x64.msi /b)
+            INSTALLER_PATH=$(dir ballerina-*-windows-x64.msi)
             msiexec //i $INSTALLER_PATH //qn
             echo "BALLERINA_HOME=C:\\Program Files\\Ballerina\\" >> $GITHUB_ENV
             powershell ${GITHUB_ACTION_PATH}/updatepath.ps1    
