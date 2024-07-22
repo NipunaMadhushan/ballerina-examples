@@ -55,7 +55,7 @@ jobs:
           echo "GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}"
           echo "GITHUB_EVENT_NAME: ${{ github.event_name }}"
           echo "GITHUB_ACTOR: ${{ github.actor }}"
-          echo "GITHUB_ACTION_BRANCH: ${{ github.action }}"
+          echo "GITHUB_ACTION_BRANCH: ${{ github.head_ref }}"
       
       - name: Get Repo Name
         id: repo_name
