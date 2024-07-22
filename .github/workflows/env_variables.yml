@@ -46,6 +46,16 @@ jobs:
           
           echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}"
           echo ${{ github.repository_owner }}
+          echo
+
+      - name: Get github variables
+        run: |
+          echo "GITHUB_REPOSITORY: ${{ github.repository }}"
+          echo "GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}"
+          echo "GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}"
+          echo "GITHUB_EVENT_NAME: ${{ github.event_name }}"
+          echo "GITHUB_ACTOR: ${{ github.actor }}"
+          echo "GITHUB_ACTION_BRANCH: ${{ github.action }}"
       
       - name: Get Repo Name
         id: repo_name
