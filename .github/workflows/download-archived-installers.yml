@@ -16,7 +16,7 @@ on:
 jobs:
   install-archived-installer:
     name: Install Archived Installers
-    runs-on: windows-latest
+    runs-on: macos-latest
     #    runs-on: ${{ matrix.os }}
 #    strategy:
 #      matrix:
@@ -27,6 +27,7 @@ jobs:
         run: |
           BALLERINA_VERSION=${{ github.event.inputs.ballerina-version }}
           DAILY_BUILD_VERSION=${BALLERINA_VERSION//nightly/daily-build}
+          echo "DAILY_BUILD_VERSION: $DAILY_BUILD_VERSION"
           
           if [[ $OSTYPE == 'msys'* ]]; then
             echo "windows runner detected"
@@ -44,6 +45,7 @@ jobs:
             ARTIFACT_NAME="MacOS Installer pkg"
             GITHUB_RUN_ID=$(curl -H "Authorization: token $GITHUB_TOKEN" -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/ballerina-platform/ballerina-distribution/actions/workflows/$DAILY_BUILD_VERSION.yml/runs?status=success&per_page=1" | jq '.workflow_runs[0].id')
+            echo "GITHUB_RUN_ID: $GITHUB_RUN_ID"
             DOWNLOAD_URL=$(curl -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             "https://api.github.com/repos/ballerina-platform/ballerina-distribution/actions/runs/$GITHUB_RUN_ID/artifacts" | jq -r --arg name "$ARTIFACT_NAME" '.artifacts[] | select(.name == $name) | .archive_download_url')
