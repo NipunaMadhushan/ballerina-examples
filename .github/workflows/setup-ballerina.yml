@@ -3,7 +3,7 @@ name: Set Up Ballerina
 on:
   workflow_dispatch:
     inputs:
-      ballerin_version: 
+      ballerina_version:
         description: 'Ballerina version'
         required: true
         default: '2201.8.3'
@@ -24,8 +24,8 @@ jobs:
           java-version: 17.0.7
       - name: Set up Ballerina
         if: github.event_name == 'workflow_dispatch'
-        uses: ballerina-platform/setup-ballerina@v1.1.0
+        uses: ballerina-platform/setup-ballerina@v1.1.2
         with:
-          version: ${{ github.event.inputs.ballerin_version }}
+          version: ${{ github.event.inputs.ballerina_version }}
       - name: Check Ballerina Version
         run: bal -v
