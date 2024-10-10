@@ -23,7 +23,7 @@ jobs:
       - name: Build deb installer
         working-directory: ballerina-distribution/installers/linux-deb
         run: |
-          ./build-ballerina-linux-deb-x64.sh -v 2201.10.2-swan-lake -p ./../../../resources
+          ./build-ballerina-linux-deb-x64.sh -v 2201.10.2-swan-lake -p ./../../..
       - name: Archive Linux deb
         uses: actions/upload-artifact@v4
         with:
