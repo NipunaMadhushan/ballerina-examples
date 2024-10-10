@@ -19,7 +19,7 @@ jobs:
         run: git clone https://github.com/ballerina-platform/ballerina-distribution.git
       - name: Download linux zip
         run: |
-          wget https://drive.google.com/file/d/1x2yi4ZhxxcWrJ7e9ggeFzcyARkJtdb08/view?usp=sharing
+          wget https://github.com/NipunaMadhushan/ballerina-examples/releases/download/test-1.0.0/ballerina-2201.10.2-swan-lake-linux.zip
       - name: Build deb installer
         working-directory: ballerina-distribution/installers/linux-deb
         run: |
