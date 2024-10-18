@@ -73,3 +73,7 @@ jobs:
         run: |
           echo "${GITHUB_EVENT_NAME}"
           echo "${{ github.event_name }}"
+
+      - name: Check Workspace
+        run: echo ${pwd}
+        
