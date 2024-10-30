@@ -76,4 +76,9 @@ jobs:
 
       - name: Check Workspace
         run: pwd
+
+      - name: Get timestamp
+        run: |
+          startTime=$(TZ="Asia/Kolkata" date +'%Y%m%d-%H%M00')
+          echo $startTime
         
