@@ -16,6 +16,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Set custom workspace
+        run: echo "GITHUB_WORKSPACE=D:\a\workspace" >> $GITHUB_ENV
+
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
