@@ -18,11 +18,13 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          path: repo
 
       - name: Move to shorter path
         run: |
           mkdir D:\a\short-path
-          move D:\a\ballerina-examples\ballerina-examples D:\a\short-path
+          move D:\a\ballerina-examples\ballerina-examples\repo D:\a\short-path
 
       - name: Test Dir
         working-directory: D:\a\short-path
