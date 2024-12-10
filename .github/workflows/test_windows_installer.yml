@@ -5,11 +5,11 @@ on:
       release_version:
         description: 'Ballerina release version'
         required: true
-        default: '2201.8.5'
+        default: '2201.10.2'
       short_version:
         description: 'Ballerina short version'
         required: true
-        default: '2201.8.5'
+        default: '2201.10.2'
 
 jobs:
   windows-installer-build:
@@ -69,12 +69,12 @@ jobs:
         run: |
           openssl dgst -sha256 -out ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows-x64.msi.sha256 w\target\msi\ballerina-*-windows-x64.msi
       - name: Archive Windows msi Hashes
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Windows msi Hashes
           path: ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows-x64.msi.sha256
       - name: Archive Windows msi
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Windows Installer msi
           path: w\target\msi\ballerina-*-windows-x64.msi
