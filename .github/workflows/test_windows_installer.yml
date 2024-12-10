@@ -46,6 +46,9 @@ jobs:
         run: |
           echo default login NipunaMadhushan password ${{ secrets.BALLERINA_BOT_TOKEN }} >> _netrc
           curl --netrc-file _netrc -L -o ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip https://github.com/ballerina-platform/ballerina-distribution/releases/download/v${{ github.event.inputs.release_version }}/ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
+      - name: Test Dir
+        run: |
+          pwd
       - name: Check Files
         run: dir/b
         shell: cmd
