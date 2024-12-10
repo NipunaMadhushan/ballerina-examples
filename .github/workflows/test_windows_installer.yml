@@ -28,7 +28,9 @@ jobs:
 
       - name: Test Dir
         working-directory: D:\a\short-path
-        run: ls
+        run: |
+          cd repo
+          ls
           
       - name: Set up JDK 11
         uses: actions/setup-java@v2
