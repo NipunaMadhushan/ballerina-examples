@@ -53,7 +53,7 @@ jobs:
         run: dir/b
         shell: cmd
       - name: Archive Ballerina Windows Zip
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Ballerina Windows Zip
           path: ballerina-${{ github.event.inputs.short_version }}-swan-lake-windows.zip
