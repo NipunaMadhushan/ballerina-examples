@@ -69,7 +69,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -95,12 +95,13 @@ jobs:
           curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
           msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
         shell: cmd
-      - name: Set path
-        run: |
-          echo "C:\Program Files\Ballerina\bin" >> $GITHUB_ENV
       - name: Check Ballerina Version
+        if: matrix.os != 'windows-latest'
+        run: bal -v
+      - name: Check Ballerina Version
+        if: matrix.os == 'windows-latest'
         run: |
-          echo $env:Path
+          $env:Path += ";C:\Program Files\Ballerina\bin"
           bal -v
       - name: Update Installer Test Configs
         run: |
@@ -109,7 +110,16 @@ jobs:
           perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-test-automation/gradle.properties
           perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-test-automation/gradle.properties
       - name: Run Installer Tests
+        if: matrix.os != 'windows-latest'
         working-directory: ./ballerina-test-automation/installer-test
         run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
+        env:
+          TEST_MODE_ACTIVE: true
+      - name: Run Installer Tests
+        if: matrix.os == 'windows-latest'
+        working-directory: ./ballerina-test-automation/installer-test
+        run: |
+          $env:Path += ";C:\Program Files\Ballerina\bin"
+          ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
         env:
           TEST_MODE_ACTIVE: true
