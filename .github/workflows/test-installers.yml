@@ -59,7 +59,7 @@ jobs:
           TEST_MODE_ACTIVE: true
 
   test-installer-without-java:
-    name: Test Installer
+    name: Test Installer Without Java
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
