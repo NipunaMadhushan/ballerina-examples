@@ -97,7 +97,7 @@ jobs:
           echo "BALLERINA_HOME=C:\\Program Files\\Ballerina\\" >> $GITHUB_ENV
           $env:Path += ";C:\Program Files\Ballerina\bin"
           echo "PATH=$env:Path" >> $env:GITHUB_ENV
-        shell: cmd
+        shell: bash
       - name: Check Ballerina Version
         run: |
           echo $env:Path
