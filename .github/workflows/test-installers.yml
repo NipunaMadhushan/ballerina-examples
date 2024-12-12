@@ -99,7 +99,7 @@ jobs:
         shell: cmd
       - name: Check Ballerina Version
         run: |
-          echo $PATH
+          echo $env:Path
           bal -v
       - name: Update Installer Test Configs
         run: |
