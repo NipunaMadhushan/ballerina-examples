@@ -95,8 +95,7 @@ jobs:
           curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
           msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
           echo "BALLERINA_HOME=C:\\Program Files\\Ballerina\\" >> $GITHUB_ENV
-          powershell ${GITHUB_ACTION_PATH}/updatepath.ps1
-        shell: bash
+        shell: cmd
       - name: Check Ballerina Version
         run: |
           echo $env:Path
