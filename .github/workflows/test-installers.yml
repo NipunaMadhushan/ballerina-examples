@@ -97,9 +97,8 @@ jobs:
         shell: cmd
       - name: Set path
         run: |
-          $newPath = "C:\Program Files\Ballerina\bin"
-          $env:Path = "$env:Path;$newPath"
-          Write-Output "Updated PATH: $env:Path"
+          $exePath = "C:\Program Files\Ballerina\bin"
+          [System.Environment]::SetEnvironmentVariable('PATH', "$env:PATH;$exePath", [System.EnvironmentVariableTarget]::Machine)
       - name: Check Ballerina Version
         run: |
           echo $env:Path
