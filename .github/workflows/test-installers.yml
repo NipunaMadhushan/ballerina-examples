@@ -96,6 +96,9 @@ jobs:
           msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
           echo "BALLERINA_HOME=C:\\Program Files\\Ballerina\\" >> $GITHUB_ENV
         shell: cmd
+      - name: Set path
+        run: |
+          echo "C:\\Program Files\\Ballerina\\bin" >> $GITHUB_PATH
       - name: Check Ballerina Version
         run: |
           echo $env:Path
