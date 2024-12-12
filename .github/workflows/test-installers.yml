@@ -97,8 +97,7 @@ jobs:
         shell: cmd
       - name: Set path
         run: |
-          $exePath = "C:\Program Files\Ballerina\bin"
-          echo "##vso[task.setvariable variable=PATH;]$env:PATH;$exePath"
+          echo "C:\Program Files\Ballerina\bin" >> $GITHUB_ENV
       - name: Check Ballerina Version
         run: |
           echo $env:Path
