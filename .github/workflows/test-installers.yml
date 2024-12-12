@@ -98,7 +98,7 @@ jobs:
       - name: Set path
         run: |
           $exePath = "C:\Program Files\Ballerina\bin"
-          [System.Environment]::SetEnvironmentVariable('PATH', "$env:PATH;$exePath", [System.EnvironmentVariableTarget]::Machine)
+          echo "##vso[task.setvariable variable=PATH;]$env:PATH;$exePath"
       - name: Check Ballerina Version
         run: |
           echo $env:Path
