@@ -13,6 +13,7 @@ jobs:
     name: Test Installer
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         java: [ '21.0.3', '17.0.7', '11' ]
@@ -41,6 +42,7 @@ jobs:
         run: |
           curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
           msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-windows-x64.msi /quiet /qr
+        shell: cmd
       - name: Check Ballerina Version
         run: bal -v
       - name: Update Installer Test Configs
@@ -49,6 +51,7 @@ jobs:
           SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
           perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-test-automation/gradle.properties
           perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-test-automation/gradle.properties
+        shell: cmd
       - name: Run Installer Tests
         working-directory: ./ballerina-test-automation/installer-test
         run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
@@ -59,6 +62,7 @@ jobs:
     name: Test Installer
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     steps:
@@ -81,6 +85,7 @@ jobs:
         run: |
           curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
           msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-windows-x64.msi /quiet /qr
+        shell: cmd
       - name: Check Ballerina Version
         run: bal -v
       - name: Update Installer Test Configs
@@ -89,6 +94,7 @@ jobs:
           SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
           perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-test-automation/gradle.properties
           perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-test-automation/gradle.properties
+        shell: cmd
       - name: Run Installer Tests
         working-directory: ./ballerina-test-automation/installer-test
         run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
