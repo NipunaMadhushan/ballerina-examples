@@ -98,7 +98,7 @@ jobs:
         shell: cmd
       - name: Set path
         run: |
-          echo "$env:Path;C:\Path\To\Executable" >> $env:Path
+          echo "C:\Path\To\Executable" >> $env:Path
       - name: Check Ballerina Version
         run: |
           echo $env:Path
