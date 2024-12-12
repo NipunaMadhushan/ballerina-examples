@@ -9,53 +9,59 @@ on:
         default: '2201.11.0'
 
 jobs:
-#  test-installer:
-#    name: Test Installer
-#    runs-on: ${{ matrix.os }}
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        os: [ ubuntu-latest, windows-latest, macos-latest ]
-#        java: [ '21.0.3', '17.0.7', '11' ]
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v3
-#        with:
-#          repository: ballerina-platform/ballerina-distribution
-#      - name: Set up JDK
-#        uses: actions/setup-java@v2
-#        with:
-#          distribution: 'temurin'
-#          java-version: ${{ matrix.java }}
-#      - name: Download & Install Ballerina
-#        if: matrix.os == 'ubuntu-latest'
-#        run: |
-#            curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb
-#            sudo dpkg -i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb
-#      - name: Download & Install Ballerina
-#        if: matrix.os == 'macos-latest'
-#        run: |
-#          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg
-#          sudo installer -pkg ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg -target /
-#      - name: Download & Install Ballerina
-#        if: matrix.os == 'windows-latest'
-#        run: |
-#          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
-#          msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
-#        shell: cmd
-#      - name: Check Ballerina Version
-#        run: bal -v
-#      - name: Update Installer Test Configs
-#        run: |
-#          DISPLAY_TEXT=${{ github.event.inputs.ballerina_version }}
-#          SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
-#          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-test-automation/gradle.properties
-#          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-test-automation/gradle.properties
-#      - name: Run Installer Tests
-#        working-directory: ./ballerina-test-automation/installer-test
-#        run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
-#        env:
-#          TEST_MODE_ACTIVE: true
+  test-installer:
+    name: Test Installer
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        java: [ '21.0.3', '17.0.7', '11' ]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          repository: ballerina-platform/ballerina-distribution
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+      - name: Download & Install Ballerina
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb
+          sudo dpkg -i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb
+          echo "BALLERINA_HOME=/usr/lib/ballerina" >> $GITHUB_ENV
+          echo "/usr/lib/ballerina/bin" >> $GITHUB_PATH
+      - name: Download & Install Ballerina
+        if: matrix.os == 'macos-latest'
+        run: |
+          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg
+          sudo installer -pkg ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg -target /
+          echo "BALLERINA_HOME=/Library/Ballerina" >> $GITHUB_ENV
+          echo "/Library/Ballerina/bin" >> $GITHUB_PATH
+      - name: Download & Install Ballerina
+        if: matrix.os == 'windows-latest'
+        run: |
+          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
+          msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
+          echo "BALLERINA_HOME=C:\\Program Files\\Ballerina\\" >> $GITHUB_ENV
+          echo "C:\\Program Files\\Ballerina\\bin" >> $env:GITHUB_PATH
+        shell: cmd
+      - name: Check Ballerina Version
+        run: bal -v
+      - name: Update Installer Test Configs
+        run: |
+          DISPLAY_TEXT=${{ github.event.inputs.ballerina_version }}
+          SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
+          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-test-automation/gradle.properties
+          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-test-automation/gradle.properties
+      - name: Run Installer Tests
+        working-directory: ./ballerina-test-automation/installer-test
+        run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
+        env:
+          TEST_MODE_ACTIVE: true
 
   test-installer-without-java:
     name: Test Installer Without Java
