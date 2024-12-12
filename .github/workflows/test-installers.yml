@@ -41,7 +41,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
-          msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-windows-x64.msi /quiet /qr
+          msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
         shell: cmd
       - name: Check Ballerina Version
         run: bal -v
@@ -83,7 +83,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
-          msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-windows-x64.msi /quiet /qr
+          msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
         shell: cmd
       - name: Check Ballerina Version
         run: bal -v
