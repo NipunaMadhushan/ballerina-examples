@@ -98,7 +98,9 @@ jobs:
           echo "PATH=${PATH};C:\Program Files\Ballerina\bin" >> $GITHUB_ENV
         shell: cmd
       - name: Check Ballerina Version
-        run: bal -v
+        run: |
+          $env:Path += ";C:\Program Files\Ballerina\bin"
+          bal -v
       - name: Update Installer Test Configs
         run: |
           DISPLAY_TEXT=${{ github.event.inputs.ballerina_version }}
