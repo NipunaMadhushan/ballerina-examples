@@ -1,6 +1,5 @@
 import ballerina/test;
 import ballerina/http;
-import ballerina/io;
 
 http:Client httpClient = check new("http://localhost:8090/shop");
 
@@ -28,8 +27,8 @@ function testProductList() {
 @test:Config
 function testAddProduct() {
     json requestPayload = {
-        "id": 4, 
-        "name": "Laptop Charger", 
+        "id": 4,
+        "name": "Laptop Charger",
         "price": 50.00
     };
     http:Response|error response = httpClient->post("/product", requestPayload);
@@ -49,19 +48,18 @@ function testAddProduct() {
 @test:Config
 function testPlaceOrder() {
     json requestPayload = {
-        "productId": 1, 
+        "productId": 1,
         "quantity": 1
     };
     http:Response|error response = httpClient->post("/order", requestPayload);
     if (response is http:Response) {
         test:assertEquals(response.statusCode, 201, "Status code should be 200");
         json|error payload = response.getJsonPayload();
-        io:println(payload);
         if (payload is json) {
             Order|error orderResponse = payload.fromJsonWithType();
             if (orderResponse is Order) {
                 string orderNumber = orders.length().toString();
-                Order actualOrder = orders.get(orderNumber);            
+                Order actualOrder = orders.get(orderNumber);
 
                 test:assertEquals(orderResponse.orderId, actualOrder.orderId, "Order ID should match");
                 test:assertEquals(orderResponse.productId, actualOrder.productId, "Product ID should match");
@@ -78,22 +76,19 @@ function testPlaceOrder() {
     }
 }
 
-@test:Config
+@test:Config {
+    dependsOn: [testPlaceOrder]
+}
 function testGetOrderDetails() {
-    json requestPayload = {
-        "productId": 1, 
-        "quantity": 1
-    };
-    http:Response|error response = httpClient->post("/order", requestPayload);
+    http:Response|error response = httpClient->get("/order/1");
     if (response is http:Response) {
-        test:assertEquals(response.statusCode, 201, "Status code should be 200");
+        test:assertEquals(response.statusCode, 200, "Status code should be 200");
         json|error payload = response.getJsonPayload();
-        io:println(payload);
         if (payload is json) {
             Order|error orderResponse = payload.fromJsonWithType();
             if (orderResponse is Order) {
                 string orderNumber = orders.length().toString();
-                Order actualOrder = orders.get(orderNumber);            
+                Order actualOrder = orders.get(orderNumber);
 
                 test:assertEquals(orderResponse.orderId, actualOrder.orderId, "Order ID should match");
                 test:assertEquals(orderResponse.productId, actualOrder.productId, "Product ID should match");
@@ -109,4 +104,3 @@ function testGetOrderDetails() {
         test:assertFail("Error occurred while fetching product list");
     }
 }
-
