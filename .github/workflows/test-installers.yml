@@ -84,6 +84,15 @@ jobs:
           ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
         env:
           TEST_MODE_ACTIVE: true
+      - name: Run HTTP Service Tests
+        if: matrix.os != 'windows-latest'
+        run: |
+          bal test resources/http-service-test
+      - name: Run HTTP Service Tests
+        if: matrix.os == 'windows-latest'
+        run: |
+          $env:Path += ";C:\Program Files\Ballerina\bin"
+          bal test resources/http-service-test     
 
   test-installer-without-java:
     name: Test Installer Without Java
@@ -154,3 +163,12 @@ jobs:
           ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
         env:
           TEST_MODE_ACTIVE: true
+      - name: Run HTTP Service Tests
+        if: matrix.os != 'windows-latest'
+        run: |
+          bal test resources/http-service-test
+      - name: Run HTTP Service Tests
+        if: matrix.os == 'windows-latest'
+        run: |
+          $env:Path += ";C:\Program Files\Ballerina\bin"
+          bal test resources/http-service-test   
