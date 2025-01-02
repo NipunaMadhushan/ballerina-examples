@@ -1,0 +1,21 @@
+### Get products
+GET http://localhost:8090/shop/products
+### Add product
+POST http://localhost:8090/shop/product
+content-type: application/json
+
+{
+    "id": 4, 
+    "name": "Laptop Charger", 
+    "price": 50.00
+}
+### Place order
+POST http://localhost:8090/shop/order
+content-type: application/json
+
+{
+    "productId": 1, 
+    "quantity": 1
+}
+### Get order details
+GET http://localhost:8090/shop/order/1
