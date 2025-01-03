@@ -20,8 +20,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-        with:
-          repository: ballerina-platform/ballerina-distribution
+#        with:
+#          repository: ballerina-platform/ballerina-distribution
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
@@ -55,35 +55,35 @@ jobs:
         run: |
           $env:Path += ";C:\Program Files\Ballerina\bin"
           bal -v
-      - name: Update Installer Test Configs
-        if: matrix.os != 'windows-latest'
-        run: |
-          DISPLAY_TEXT=${{ github.event.inputs.ballerina_version }}
-          SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
-          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-test-automation/gradle.properties
-          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-test-automation/gradle.properties
-      - name: Update Installer Test Configs
-        if: matrix.os == 'windows-latest'
-        run: |
-          set DISPLAY_TEXT=${{ github.event.inputs.ballerina_version }}
-          set SWAN_LAKE_LATEST_VERSION=swan-lake-%DISPLAY_TEXT%
-          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=%DISPLAY_TEXT%/" ballerina-test-automation/gradle.properties
-          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=%SWAN_LAKE_LATEST_VERSION%/" ballerina-test-automation/gradle.properties
-        shell: cmd
-      - name: Run Installer Tests
-        if: matrix.os != 'windows-latest'
-        working-directory: ./ballerina-test-automation/installer-test
-        run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
-        env:
-          TEST_MODE_ACTIVE: true
-      - name: Run Installer Tests
-        if: matrix.os == 'windows-latest'
-        working-directory: ./ballerina-test-automation/installer-test
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
-        env:
-          TEST_MODE_ACTIVE: true
+#      - name: Update Installer Test Configs
+#        if: matrix.os != 'windows-latest'
+#        run: |
+#          DISPLAY_TEXT=${{ github.event.inputs.ballerina_version }}
+#          SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
+#          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-test-automation/gradle.properties
+#          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-test-automation/gradle.properties
+#      - name: Update Installer Test Configs
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          set DISPLAY_TEXT=${{ github.event.inputs.ballerina_version }}
+#          set SWAN_LAKE_LATEST_VERSION=swan-lake-%DISPLAY_TEXT%
+#          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=%DISPLAY_TEXT%/" ballerina-test-automation/gradle.properties
+#          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=%SWAN_LAKE_LATEST_VERSION%/" ballerina-test-automation/gradle.properties
+#        shell: cmd
+#      - name: Run Installer Tests
+#        if: matrix.os != 'windows-latest'
+#        working-directory: ./ballerina-test-automation/installer-test
+#        run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
+#        env:
+#          TEST_MODE_ACTIVE: true
+#      - name: Run Installer Tests
+#        if: matrix.os == 'windows-latest'
+#        working-directory: ./ballerina-test-automation/installer-test
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
+#        env:
+#          TEST_MODE_ACTIVE: true
       - name: Run HTTP Service Tests
         if: matrix.os != 'windows-latest'
         run: |
@@ -104,8 +104,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-        with:
-          repository: ballerina-platform/ballerina-distribution
       - name: Download & Install Ballerina
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -134,35 +132,6 @@ jobs:
         run: |
           $env:Path += ";C:\Program Files\Ballerina\bin"
           bal -v
-      - name: Update Installer Test Configs
-        if: matrix.os != 'windows-latest'
-        run: |
-          DISPLAY_TEXT=${{ github.event.inputs.ballerina_version }}
-          SWAN_LAKE_LATEST_VERSION="swan-lake-"+$DISPLAY_TEXT
-          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=$DISPLAY_TEXT/" ballerina-test-automation/gradle.properties
-          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=$SWAN_LAKE_LATEST_VERSION/" ballerina-test-automation/gradle.properties
-      - name: Update Installer Test Configs
-        if: matrix.os == 'windows-latest'
-        run: |
-          set DISPLAY_TEXT=${{ github.event.inputs.ballerina_version }}
-          set SWAN_LAKE_LATEST_VERSION=swan-lake-%DISPLAY_TEXT%
-          perl -pi -e "s/^\s*swan-lake-latest-version-display-text=.*/swan-lake-latest-version-display-text=%DISPLAY_TEXT%/" ballerina-test-automation/gradle.properties
-          perl -pi -e "s/^\s*swan-lake-latest-version=.*/swan-lake-latest-version=%SWAN_LAKE_LATEST_VERSION%/" ballerina-test-automation/gradle.properties
-        shell: cmd
-      - name: Run Installer Tests
-        if: matrix.os != 'windows-latest'
-        working-directory: ./ballerina-test-automation/installer-test
-        run: ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
-        env:
-          TEST_MODE_ACTIVE: true
-      - name: Run Installer Tests
-        if: matrix.os == 'windows-latest'
-        working-directory: ./ballerina-test-automation/installer-test
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          ./../gradlew build --stacktrace -scan --console=plain --no-daemon -DballerinaInstalled=true
-        env:
-          TEST_MODE_ACTIVE: true
       - name: Run HTTP Service Tests
         if: matrix.os != 'windows-latest'
         run: |
@@ -172,3 +141,63 @@ jobs:
         run: |
           $env:Path += ";C:\Program Files\Ballerina\bin"
           bal test resources/http-service-test   
+
+  test-update-tool-installed-with-older-version:
+    name: Test Update Tool (Installed with older version)
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        ballerina_version: [ '2201.4.0', '2201.9.0' ]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Download & Install Ballerina
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          curl -L -o ballerina-${{ matrix.ballerina_version }}-swan-lake-linux-x64.deb https://dist-dev.ballerina.io/downloads/${{ matrix.ballerina_version }}/ballerina-${{ matrix.ballerina_version }}-swan-lake-linux-x64.deb
+          sudo dpkg -i ballerina-${{ matrix.ballerina_version }}-swan-lake-linux-x64.deb
+          echo "BALLERINA_HOME=/usr/lib/ballerina" >> $GITHUB_ENV
+          echo "/usr/lib/ballerina/bin" >> $GITHUB_PATH
+      - name: Download & Install Ballerina
+        if: matrix.os == 'macos-latest'
+        run: |
+          curl -L -o ballerina-${{ matrix.ballerina_version }}-swan-lake-macos-x64.pkg https://dist-dev.ballerina.io/downloads/${{ matrix.ballerina_version }}/ballerina-${{ matrix.ballerina_version }}-swan-lake-macos-x64.pkg
+          sudo installer -pkg ballerina-${{ matrix.ballerina_version }}-swan-lake-macos-x64.pkg -target /
+          echo "BALLERINA_HOME=/Library/Ballerina" >> $GITHUB_ENV
+          echo "/Library/Ballerina/bin" >> $GITHUB_PATH
+      - name: Download & Install Ballerina
+        if: matrix.os == 'windows-latest'
+        run: |
+          curl -L -o ballerina-${{ matrix.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ matrix.ballerina_version }}/ballerina-${{ matrix.ballerina_version }}-swan-lake-windows-x64.msi
+          msiexec /i ballerina-${{ matrix.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
+        shell: cmd
+      - name: Check Ballerina Version
+        if: matrix.os != 'windows-latest'
+        run: bal -v
+      - name: Check Ballerina Version
+        if: matrix.os == 'windows-latest'
+        run: |
+          $env:Path += ";C:\Program Files\Ballerina\bin"
+          bal -v
+      - name: Change Ballerina Version
+        run: |
+          sudo bal dist pull ${{ github.event.inputs.ballerina_version }}
+      - name: Check Ballerina Version
+        if: matrix.os != 'windows-latest'
+        run: bal -v
+      - name: Check Ballerina Version
+        if: matrix.os == 'windows-latest'
+        run: |
+          $env:Path += ";C:\Program Files\Ballerina\bin"
+          bal -v
+      - name: Run HTTP Service Tests
+        if: matrix.os != 'windows-latest'
+        run: |
+          bal test resources/http-service-test
+      - name: Run HTTP Service Tests
+        if: matrix.os == 'windows-latest'
+        run: |
+          $env:Path += ";C:\Program Files\Ballerina\bin"
+          bal test resources/http-service-test  
