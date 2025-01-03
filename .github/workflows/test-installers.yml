@@ -183,6 +183,7 @@ jobs:
           bal -v
       - name: Change Ballerina Version
         run: |
+          export BALLERINA_STAGING_UPDATE=true
           sudo bal dist pull ${{ github.event.inputs.ballerina_version }}
       - name: Check Ballerina Version
         if: matrix.os != 'windows-latest'
