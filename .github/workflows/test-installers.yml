@@ -185,12 +185,14 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: |
           export BALLERINA_STAGING_UPDATE=true
+          sudo -E bal update
           sudo -E bal dist pull ${{ github.event.inputs.ballerina_version }}
       - name: Change Ballerina Version
         if: matrix.os == 'windows-latest'
         run: |
           $env:Path += ";C:\Program Files\Ballerina\bin"
           $env:BALLERINA_STAGING_UPDATE = "true"
+          bal update
           bal dist pull ${{ github.event.inputs.ballerina_version }}
       - name: Check Ballerina Version
         if: matrix.os != 'windows-latest'
