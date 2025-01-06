@@ -33,9 +33,21 @@ jobs:
 
       - name: Clone Modules
         run: |
-          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); \
-          do git clone https://github.com/ballerina-platform/${module_name}.git -b metrics-logs; \
+          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); do
+            echo "Cloning module: ${module_name}"
+            git clone https://github.com/ballerina-platform/${module_name}.git
+            cd ${module_name}
+            if git show-ref --verify --quiet refs/heads/"metrics-logs"; then
+              git checkout metrics-logs
+            else
+              echo "Branch '$branch' not found. Staying on the default branch."
+            fi
+            cd ..
           done
+#          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); \
+#          do git clone https://github.com/ballerina-platform/${module_name}.git -b metrics-logs; \
+#          done
+        shell: bash
 
       - name: Update Lang Version in Module
         run: |
