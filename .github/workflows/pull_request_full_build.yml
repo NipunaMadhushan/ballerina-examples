@@ -38,6 +38,7 @@ jobs:
             repo_url=https://github.com/ballerina-platform/${module_name}.git
             branch=metrics-logs
             if git ls-remote --heads "$repo_url" "$branch" | grep -q "$branch"; then
+              echo "Branch '$branch' found."
               git clone -b "$branch" --single-branch "$repo_url"
             else
               echo "Branch '$branch' not found. Cloning default branch '$default_branch' instead."
