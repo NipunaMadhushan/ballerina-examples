@@ -149,7 +149,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        ballerina_version: [ '2201.7.0', '2201.7.5', '2201.9.0' ]
+        ballerina_version: [ '2201.7.0', '2201.7.5', '2201.9.0', '2201.10.2' ]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
