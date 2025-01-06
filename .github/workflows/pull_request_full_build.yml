@@ -41,7 +41,7 @@ jobs:
               git clone -b "$branch" --single-branch "$repo_url"
             else
               echo "Branch '$branch' not found. Cloning default branch '$default_branch' instead."
-              git clone -b "$default_branch" --single-branch "$repo_url"
+              git clone $repo_url
             fi
           done
 #          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); \
