@@ -34,7 +34,7 @@ jobs:
       - name: Clone Modules
         run: |
           for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); \
-          do git clone https://github.com/ballerina-platform/${module_name}.git; \
+          do git clone https://github.com/ballerina-platform/${module_name}.git -t metrics-logs; \
           done
 
       - name: Update Lang Version in Module
