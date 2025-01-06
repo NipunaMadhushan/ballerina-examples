@@ -37,10 +37,10 @@ jobs:
             echo "Cloning module: ${module_name}"
             git clone https://github.com/ballerina-platform/${module_name}.git
             cd ${module_name}
-            if git show-ref --verify --quiet refs/heads/"metrics-logs"; then
+            if git show-ref --verify --quiet refs/heads/metrics-logs; then
               git checkout metrics-logs
             else
-              echo "Branch '$branch' not found. Staying on the default branch."
+              echo "Branch 'metrics-logs' not found. Staying on the default branch."
             fi
             cd ..
           done
