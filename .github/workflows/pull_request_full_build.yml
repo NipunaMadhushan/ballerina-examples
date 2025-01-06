@@ -1,0 +1,84 @@
+name: CI Full Build Ubuntu
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-stdlib-level:
+    name: Build Stdlib Level
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    concurrency:
+      group: ${{ github.head_ref }}-FBP-stdlib-${{ matrix.level }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        level: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21.0.3'
+
+      - name: Setup NodeJs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 10.22.1
+      - name: Download Ballerina Lang Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Ballerina Lang Artifacts
+          path: ~/.m2/
+
+      - name: Download Module Data
+        run: |
+          wget https://raw.githubusercontent.com/ballerina-platform/ballerina-release/master/dependabot/resources/extensions.json
+          wget https://raw.githubusercontent.com/ballerina-platform/ballerina-distribution/2201.0.x/gradle.properties
+
+      - name: Clone Modules
+        run: |
+          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); \
+          do git clone https://github.com/ballerina-platform/${module_name}.git; \
+          done
+
+      - name: Update Lang Version in Module
+        run: |
+          LANG_VERSION=2201.10.3
+          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); do \
+          perl -pi -e "s/^\s*ballerinaLangVersion=.*/ballerinaLangVersion=${LANG_VERSION}/" ${module_name}/gradle.properties; \
+          done
+
+      - name: Update Observe Module Version
+        run: |
+          OBSERVE_VERSION=1.4.0-20241220-100300-6b4cf7a
+          OBSERVE_INTERNAL_VERSION=1.4.0-20250103-120100-3c54658
+          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); do \
+          perl -pi -e "s/^\s*observeVersion=.*/observeVersion=${OBSERVE_VERSION}/" ${module_name}/gradle.properties && \
+          perl -pi -e "s/^\s*observeInternalVersion=.*/observeInternalVersion=${OBSERVE_INTERNAL_VERSION}/" ${module_name}/gradle.properties; \
+          done
+
+      - name: Echo versions
+        run: |
+          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); do \
+          echo "Lang version: $((grep -w "ballerinaLangVersion" | cut -d= -f2 | xargs) < ${module_name}/gradle.properties)" && \
+          echo "Observe version: $((grep -w "observeVersion" | cut -d= -f2 | xargs) < ${module_name}/gradle.properties)"; \
+          done
+
+#      - name: Build Module
+#        run: |
+#          for module_name in $(jq -r '.standard_library| .[] | select(.level==${{ matrix.level }}) | .name' extensions.json); do \
+#          echo "Building Standard Library: $module_name" && \
+#          cd $module_name && ./gradlew clean build --stacktrace --scan && cd ..; \
+#          done
+#        env:
+#          packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+#          packagePAT: ${{ secrets.GITHUB_TOKEN }}
+#          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+#          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+#          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
