@@ -175,12 +175,15 @@ jobs:
         shell: cmd
       - name: Check Ballerina Version
         if: matrix.os != 'windows-latest'
-        run: bal -v
+        run: |
+          bal -v
+          bal dist list
       - name: Check Ballerina Version
         if: matrix.os == 'windows-latest'
         run: |
           $env:Path += ";C:\Program Files\Ballerina\bin"
           bal -v
+          bal dist list
       - name: Change Ballerina Version
         if: matrix.os != 'windows-latest'
         run: |
@@ -243,12 +246,15 @@ jobs:
         shell: cmd
       - name: Check Ballerina Version
         if: matrix.os != 'windows-latest'
-        run: bal -v
+        run: |
+          bal -v
+          bal dist list
       - name: Check Ballerina Version
         if: matrix.os == 'windows-latest'
         run: |
           $env:Path += ";C:\Program Files\Ballerina\bin"
           bal -v
+          bal dist list
       - name: Change Ballerina Version
         if: matrix.os != 'windows-latest'
         run: |
