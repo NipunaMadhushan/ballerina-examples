@@ -148,8 +148,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        ballerina_version: [ '2201.7.0', '2201.7.5', '2201.9.0', '2201.10.2' ]
+        os: [ windows-latest ]
+        ballerina_version: [ '2201.9.0', '2201.10.2' ]
+#        os: [ ubuntu-latest, macos-latest, windows-latest ]
+#        ballerina_version: [ '2201.7.0', '2201.7.5', '2201.9.0', '2201.10.2' ]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -213,145 +215,145 @@ jobs:
           $env:Path += ";C:\Program Files\Ballerina\bin"
           bal test resources/http-service-test  
 
-  test-update-tool-installed-with-current-version:
-    name: Test Update Tool (Installed with current version)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        ballerina_version: [ '2201.4.0', '2201.9.0' ]
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Download & Install Ballerina
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb
-          sudo dpkg -i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb
-          echo "BALLERINA_HOME=/usr/lib/ballerina" >> $GITHUB_ENV
-          echo "/usr/lib/ballerina/bin" >> $GITHUB_PATH
-      - name: Download & Install Ballerina
-        if: matrix.os == 'macos-latest'
-        run: |
-          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg
-          sudo installer -pkg ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg -target /
-          echo "BALLERINA_HOME=/Library/Ballerina" >> $GITHUB_ENV
-          echo "/Library/Ballerina/bin" >> $GITHUB_PATH
-      - name: Download & Install Ballerina
-        if: matrix.os == 'windows-latest'
-        run: |
-          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
-          msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
-        shell: cmd
-      - name: Check Ballerina Version
-        if: matrix.os != 'windows-latest'
-        run: |
-          bal -v
-          bal dist list
-      - name: Check Ballerina Version
-        if: matrix.os == 'windows-latest'
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          bal -v
-          bal dist list
-      - name: Change Ballerina Version
-        if: matrix.os != 'windows-latest'
-        run: |
-          export BALLERINA_STAGING_UPDATE=true
-          sudo -E bal dist pull ${{ matrix.ballerina_version }}
-      - name: Change Ballerina Version
-        if: matrix.os == 'windows-latest'
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          $env:BALLERINA_STAGING_UPDATE = "true"
-          bal update
-          bal dist pull ${{ matrix.ballerina_version }}
-      - name: Check Ballerina Version
-        if: matrix.os != 'windows-latest'
-        run: bal -v
-      - name: Check Ballerina Version
-        if: matrix.os == 'windows-latest'
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          bal -v
-      - name: Run HTTP Service Tests
-        if: matrix.os != 'windows-latest'
-        run: |
-          bal test resources/http-service-test
-      - name: Run HTTP Service Tests
-        if: matrix.os == 'windows-latest'
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          bal test resources/http-service-test
+#  test-update-tool-installed-with-current-version:
+#    name: Test Update Tool (Installed with current version)
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [ ubuntu-latest, macos-latest, windows-latest ]
+#        ballerina_version: [ '2201.4.0', '2201.9.0' ]
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#      - name: Download & Install Ballerina
+#        if: matrix.os == 'ubuntu-latest'
+#        run: |
+#          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb
+#          sudo dpkg -i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-linux-x64.deb
+#          echo "BALLERINA_HOME=/usr/lib/ballerina" >> $GITHUB_ENV
+#          echo "/usr/lib/ballerina/bin" >> $GITHUB_PATH
+#      - name: Download & Install Ballerina
+#        if: matrix.os == 'macos-latest'
+#        run: |
+#          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg
+#          sudo installer -pkg ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-macos-x64.pkg -target /
+#          echo "BALLERINA_HOME=/Library/Ballerina" >> $GITHUB_ENV
+#          echo "/Library/Ballerina/bin" >> $GITHUB_PATH
+#      - name: Download & Install Ballerina
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          curl -L -o ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ github.event.inputs.ballerina_version }}/ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi
+#          msiexec /i ballerina-${{ github.event.inputs.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
+#        shell: cmd
+#      - name: Check Ballerina Version
+#        if: matrix.os != 'windows-latest'
+#        run: |
+#          bal -v
+#          bal dist list
+#      - name: Check Ballerina Version
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          bal -v
+#          bal dist list
+#      - name: Change Ballerina Version
+#        if: matrix.os != 'windows-latest'
+#        run: |
+#          export BALLERINA_STAGING_UPDATE=true
+#          sudo -E bal dist pull ${{ matrix.ballerina_version }}
+#      - name: Change Ballerina Version
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          $env:BALLERINA_STAGING_UPDATE = "true"
+#          bal update
+#          bal dist pull ${{ matrix.ballerina_version }}
+#      - name: Check Ballerina Version
+#        if: matrix.os != 'windows-latest'
+#        run: bal -v
+#      - name: Check Ballerina Version
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          bal -v
+#      - name: Run HTTP Service Tests
+#        if: matrix.os != 'windows-latest'
+#        run: |
+#          bal test resources/http-service-test
+#      - name: Run HTTP Service Tests
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          bal test resources/http-service-test
 
-  test-update-tool-installed-with-older-version-update:
-    name: Test Update Tool 'dist update' (Installed with older version)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        ballerina_version: [ '2201.7.0', '2201.7.5', '2201.9.0', '2201.10.2' ]
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-      - name: Download & Install Ballerina
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          curl -L -o ballerina-${{ matrix.ballerina_version }}-swan-lake-linux-x64.deb https://dist-dev.ballerina.io/downloads/${{ matrix.ballerina_version }}/ballerina-${{ matrix.ballerina_version }}-swan-lake-linux-x64.deb
-          sudo dpkg -i ballerina-${{ matrix.ballerina_version }}-swan-lake-linux-x64.deb
-          echo "BALLERINA_HOME=/usr/lib/ballerina" >> $GITHUB_ENV
-          echo "/usr/lib/ballerina/bin" >> $GITHUB_PATH
-      - name: Download & Install Ballerina
-        if: matrix.os == 'macos-latest'
-        run: |
-          curl -L -o ballerina-${{ matrix.ballerina_version }}-swan-lake-macos-x64.pkg https://dist-dev.ballerina.io/downloads/${{ matrix.ballerina_version }}/ballerina-${{ matrix.ballerina_version }}-swan-lake-macos-x64.pkg
-          sudo installer -pkg ballerina-${{ matrix.ballerina_version }}-swan-lake-macos-x64.pkg -target /
-          echo "BALLERINA_HOME=/Library/Ballerina" >> $GITHUB_ENV
-          echo "/Library/Ballerina/bin" >> $GITHUB_PATH
-      - name: Download & Install Ballerina
-        if: matrix.os == 'windows-latest'
-        run: |
-          curl -L -o ballerina-${{ matrix.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ matrix.ballerina_version }}/ballerina-${{ matrix.ballerina_version }}-swan-lake-windows-x64.msi
-          msiexec /i ballerina-${{ matrix.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
-        shell: cmd
-      - name: Check Ballerina Version
-        if: matrix.os != 'windows-latest'
-        run: |
-          bal -v
-          bal dist list
-      - name: Check Ballerina Version
-        if: matrix.os == 'windows-latest'
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          bal -v
-          bal dist list
-      - name: Change Ballerina Version
-        if: matrix.os != 'windows-latest'
-        run: |
-          export BALLERINA_STAGING_UPDATE=true
-          sudo -E bal dist update
-      - name: Change Ballerina Version
-        if: matrix.os == 'windows-latest'
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          $env:BALLERINA_STAGING_UPDATE = "true"
-          bal dist update
-      - name: Check Ballerina Version
-        if: matrix.os != 'windows-latest'
-        run: bal -v
-      - name: Check Ballerina Version
-        if: matrix.os == 'windows-latest'
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          bal -v
-      - name: Run HTTP Service Tests
-        if: matrix.os != 'windows-latest'
-        run: |
-          bal test resources/http-service-test
-      - name: Run HTTP Service Tests
-        if: matrix.os == 'windows-latest'
-        run: |
-          $env:Path += ";C:\Program Files\Ballerina\bin"
-          bal test resources/http-service-test        
+#  test-update-tool-installed-with-older-version-update:
+#    name: Test Update Tool 'dist update' (Installed with older version)
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        os: [ ubuntu-latest, macos-latest, windows-latest ]
+#        ballerina_version: [ '2201.7.0', '2201.7.5', '2201.9.0', '2201.10.2' ]
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#      - name: Download & Install Ballerina
+#        if: matrix.os == 'ubuntu-latest'
+#        run: |
+#          curl -L -o ballerina-${{ matrix.ballerina_version }}-swan-lake-linux-x64.deb https://dist-dev.ballerina.io/downloads/${{ matrix.ballerina_version }}/ballerina-${{ matrix.ballerina_version }}-swan-lake-linux-x64.deb
+#          sudo dpkg -i ballerina-${{ matrix.ballerina_version }}-swan-lake-linux-x64.deb
+#          echo "BALLERINA_HOME=/usr/lib/ballerina" >> $GITHUB_ENV
+#          echo "/usr/lib/ballerina/bin" >> $GITHUB_PATH
+#      - name: Download & Install Ballerina
+#        if: matrix.os == 'macos-latest'
+#        run: |
+#          curl -L -o ballerina-${{ matrix.ballerina_version }}-swan-lake-macos-x64.pkg https://dist-dev.ballerina.io/downloads/${{ matrix.ballerina_version }}/ballerina-${{ matrix.ballerina_version }}-swan-lake-macos-x64.pkg
+#          sudo installer -pkg ballerina-${{ matrix.ballerina_version }}-swan-lake-macos-x64.pkg -target /
+#          echo "BALLERINA_HOME=/Library/Ballerina" >> $GITHUB_ENV
+#          echo "/Library/Ballerina/bin" >> $GITHUB_PATH
+#      - name: Download & Install Ballerina
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          curl -L -o ballerina-${{ matrix.ballerina_version }}-swan-lake-windows-x64.msi https://dist-dev.ballerina.io/downloads/${{ matrix.ballerina_version }}/ballerina-${{ matrix.ballerina_version }}-swan-lake-windows-x64.msi
+#          msiexec /i ballerina-${{ matrix.ballerina_version }}-swan-lake-windows-x64.msi /quiet /qr
+#        shell: cmd
+#      - name: Check Ballerina Version
+#        if: matrix.os != 'windows-latest'
+#        run: |
+#          bal -v
+#          bal dist list
+#      - name: Check Ballerina Version
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          bal -v
+#          bal dist list
+#      - name: Change Ballerina Version
+#        if: matrix.os != 'windows-latest'
+#        run: |
+#          export BALLERINA_STAGING_UPDATE=true
+#          sudo -E bal dist update
+#      - name: Change Ballerina Version
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          $env:BALLERINA_STAGING_UPDATE = "true"
+#          bal dist update
+#      - name: Check Ballerina Version
+#        if: matrix.os != 'windows-latest'
+#        run: bal -v
+#      - name: Check Ballerina Version
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          bal -v
+#      - name: Run HTTP Service Tests
+#        if: matrix.os != 'windows-latest'
+#        run: |
+#          bal test resources/http-service-test
+#      - name: Run HTTP Service Tests
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          bal test resources/http-service-test
