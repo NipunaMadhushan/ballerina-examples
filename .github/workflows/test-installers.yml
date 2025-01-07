@@ -199,10 +199,8 @@ jobs:
           bal dist pull ${{ github.event.inputs.ballerina_version }}
 
       - name: Check dependency folder
-        if: always()
+        if: ${{ failure() }}
         run: |
-          ls -l /usr/lib/ballerina/dependencies
-          ls -l /Library/Ballerina/dependencies
           ls -l "C:\Program Files\Ballerina\dependencies"
 
       - name: Check Ballerina Version
