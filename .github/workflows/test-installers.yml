@@ -197,6 +197,14 @@ jobs:
           $env:Path += ";C:\Program Files\Ballerina\bin"
           $env:BALLERINA_STAGING_UPDATE = "true"
           bal dist pull ${{ github.event.inputs.ballerina_version }}
+
+      - name: Check dependency folder
+        if: always()
+        run: |
+          ls -l /usr/lib/ballerina/dependencies
+          ls -l /Library/Ballerina/dependencies
+          ls -l "C:\Program Files\Ballerina\dependencies"
+
       - name: Check Ballerina Version
         if: matrix.os != 'windows-latest'
         run: bal -v
