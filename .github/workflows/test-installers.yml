@@ -207,10 +207,15 @@ jobs:
         if: matrix.os != 'windows-latest'
         run: bal -v
       - name: Check Ballerina Version
-        if: matrix.os == 'windows-latest'
+        if: always()
         run: |
           $env:Path += ";C:\Program Files\Ballerina\bin"
           bal -v
+#      - name: Check Ballerina Version
+#        if: matrix.os == 'windows-latest'
+#        run: |
+#          $env:Path += ";C:\Program Files\Ballerina\bin"
+#          bal -v
       - name: Run HTTP Service Tests
         if: matrix.os != 'windows-latest'
         run: |
